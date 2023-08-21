@@ -1,0 +1,10 @@
+/.idea/
+/.vscode/
+/vendor/
+/vendor-bin/*/vendor
+/composer.lock
+/node_modules/
+.DS_STORE
+
+/.php-cs-fixer.cache
+/dev_rfc.log
