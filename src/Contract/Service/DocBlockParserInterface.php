@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Contract\Service;
 
-use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocChildNode;
 
 interface DocBlockParserInterface
 {
     /**
-     * @return PhpDocTagNode[]
+     * @return array<string, PhpDocChildNode>
      */
     public function parseDocBlock(string $docBlock): array;
 
     /**
      * @return string[]
      */
-    public function determineTypeHint(PhpDocTagNode $docBlock, \ReflectionClass $reflectionClass): array;
+    public function determineTypeHint(PhpDocChildNode $docBlock, \ReflectionClass $reflectionClass): array;
 }

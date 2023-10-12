@@ -17,11 +17,12 @@ use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\ParameterDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\RequestDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\ResponseDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\RouteDoc;
-use Valantic\PimcoreApiDocumentationBundle\Util\Str;
 
 readonly class ControllerMethodParser implements ControllerMethodParserInterface
 {
-    public function __construct(private SchemaGeneratorInterface $schemaGenerator) {}
+    public function __construct(private SchemaGeneratorInterface $schemaGenerator)
+    {
+    }
 
     public function parseMethod(\ReflectionMethod $method): MethodDoc
     {
@@ -61,7 +62,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         }
 
         $path = $routeAttributeArguments['path'];
-        preg_match_all('/{([^}]+)}/', $path, $routeParameters);
+        preg_match_all('/{([^}]+)}/', (string) $path, $routeParameters);
 
         $parsedParameters = [];
 
@@ -85,14 +86,14 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
         $routeDoc
             ->setPath($path)
-            ->setMethod(strtolower($routeAttributeArguments['methods']))
+            ->setMethod(strtolower((string) $routeAttributeArguments['methods']))
             ->setParameters($parsedParameters);
 
         return $routeDoc;
     }
 
     /**
-     * @return null|array{request: RequestDoc, schemas: array<ComponentSchemaDoc>}
+     * @return array{request: RequestDoc, schemas: array<ComponentSchemaDoc>}|null
      */
     private function parseRequest(\ReflectionMethod $method): ?array
     {
@@ -172,7 +173,9 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
         if ($methodReturnType === null) {
             throw new \Exception(sprintf(
-                'Missing return type for method %s::%s', $method->getDeclaringClass()->getName(), $method->getName()
+                'Missing return type for method %s::%s',
+                $method->getDeclaringClass()->getName(),
+                $method->getName()
             ));
         }
 

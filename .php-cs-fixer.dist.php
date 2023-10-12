@@ -1,61 +1,33 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in([
-        __DIR__ . '/.ci',
-        __DIR__ . '/config',
-        __DIR__ . '/src',
-    ])
-    ->name(['*.php', '*.stub']);
+    ->in('src');
 
 return (new PhpCsFixer\Config())
-    ->setRiskyAllowed(true)
-    ->setUsingCache(true)
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        '@PER' => true,
-        '@PER:risky' => true,
-        '@PHP80Migration:risky' => true,
         '@PHP81Migration' => true,
+        '@PHP80Migration:risky' => true,
+        '@PSR12' => true,
+        '@PSR12:risky' => true,
+        'align_multiline_comment' => true,
         'array_indentation' => true,
-        'array_push' => false,
-        'blank_line_before_statement' => [
-            'statements' => [
-                'break',
-                'case',
-                'continue',
-                'declare',
-                'default',
-                'do',
-                'exit',
-                'for',
-                'foreach',
-                'goto',
-                'if',
-                'include',
-                'include_once',
-                // 'phpdoc',
-                'require',
-                'require_once',
-                'return',
-                'switch',
-                'throw',
-                'try',
-                'while',
-                'yield',
-                'yield_from',
-            ],
-        ],
-        'concat_space' => ['spacing' => 'one'],
+        'class_attributes_separation' => ['elements' => ['method' => 'one', 'property' => 'only_if_meta']],
+        'function_declaration' => ['closure_function_spacing' => 'none'],
+        'method_chaining_indentation' => true,
+        'multiline_comment_opening_closing' => true,
+        'concat_space' => false,
         'declare_strict_types' => true,
-        'increment_style' => [
-            'style' => 'post',
-        ],
+        'increment_style' => ['style' => 'post'],
         'multiline_whitespace_before_semicolons' => true,
         'native_constant_invocation' => false,
         'native_function_invocation' => false,
         'no_empty_comment' => true,
+        'no_null_property_initialization' => true,
+        'no_superfluous_phpdoc_tags' => true,
+        'no_unset_on_property' => false,
+        'no_useless_else' => true,
         'no_useless_return' => true,
         'nullable_type_declaration_for_default_null_value' => true,
         'ordered_class_elements' => [
@@ -64,7 +36,6 @@ return (new PhpCsFixer\Config())
                 'constant_public',
                 'constant_protected',
                 'constant_private',
-                'case',
                 'property_public',
                 'property_public_static',
                 'property_protected',
@@ -84,18 +55,22 @@ return (new PhpCsFixer\Config())
                 'method_private',
             ],
         ],
+        'operator_linebreak' => ['only_booleans' => true],
+        'phpdoc_align' => ['align' => 'left'],
+        'phpdoc_order' => true,
         'phpdoc_annotation_without_dot' => false,
         'phpdoc_summary' => false,
-        'ordered_imports' => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
+        'phpdoc_tag_casing' => true,
+        'phpdoc_to_comment' => false,
+        'regular_callable_call' => true,
+        'return_assignment' => true,
         'self_accessor' => false, // do not enable self_accessor as it breaks pimcore models relying on get_called_class()
         'single_line_throw' => false,
         'strict_comparison' => true,
         'strict_param' => true,
         'trailing_comma_in_multiline' => ['elements' => ['arrays', 'parameters', 'match']],
-        'yoda_style' => [
-            'equal' => false,
-            'identical' => false,
-            'less_and_greater' => false,
-        ],
+        'yoda_style' => false,
     ])
-    ->setFinder($finder);
+    ->setFinder($finder)
+    ->setRiskyAllowed(true)
+    ->setUsingCache(true);

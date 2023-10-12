@@ -12,7 +12,7 @@ use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocsGeneratorInterfa
 
 class DocGeneratorCommand extends AbstractCommand
 {
-    public const DEFAULT_PATH = PIMCORE_PRIVATE_VAR . '/api-docs/api_documentation.json';
+    final public const DEFAULT_PATH = PIMCORE_PRIVATE_VAR . '/api-docs/api_documentation.json';
     private const PATH_ARGUMENT = 'path';
 
     public function __construct(
@@ -27,12 +27,17 @@ class DocGeneratorCommand extends AbstractCommand
         $this
             ->setName('valantic:api-doc:generate')
             ->setDescription('Generate api docs for controller actions.')
-            ->addArgument(self::PATH_ARGUMENT, InputArgument::OPTIONAL, 'Define path for saving docs.');
+            ->addArgument(
+                self::PATH_ARGUMENT,
+                InputArgument::OPTIONAL,
+                'Define path for saving docs.',
+                self::DEFAULT_PATH
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $filePath = $input->getArgument(self::PATH_ARGUMENT) ?? self::DEFAULT_PATH;
+        $filePath = $input->getArgument(self::PATH_ARGUMENT);
         $this->docsGenerator->generate($filePath);
 
         return self::SUCCESS;

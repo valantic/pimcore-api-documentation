@@ -19,7 +19,8 @@ readonly class DocsGenerator implements DocsGeneratorInterface
         private array $controllers,
         private array $apiConfig,
         private ControllerMethodParserInterface $controllerMethodParser,
-    ) {}
+    ) {
+    }
 
     public function generate(string $docsPath): void
     {
@@ -77,16 +78,16 @@ readonly class DocsGenerator implements DocsGeneratorInterface
     /**
      * @param class-string $controllerClass
      *
-     * @return \ReflectionMethod[]
-     *
      * @throws \ReflectionException
+     *
+     * @return \ReflectionMethod[]
      */
     private function getValidControllerMethods(string $controllerClass): array
     {
         $controllerReflection = new \ReflectionClass($controllerClass);
         $methods = $controllerReflection->getMethods();
 
-        return array_filter($methods, function ($method) use ($controllerClass) {
+        return array_filter($methods, function($method) use ($controllerClass) {
             $methodClass = $method->getDeclaringClass()->getName();
 
             return $method->getName() !== '__construct' && $methodClass === $controllerClass;
@@ -102,7 +103,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
     {
         $file = fopen($filePath, 'w');
 
-        $jsonContent = json_encode($content);
+        $jsonContent = json_encode($content, JSON_THROW_ON_ERROR);
 
         if ($file !== false && $jsonContent !== false) {
             fwrite($file, $jsonContent);

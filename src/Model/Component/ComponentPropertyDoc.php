@@ -10,6 +10,7 @@ class ComponentPropertyDoc implements \JsonSerializable
 {
     private string $name;
     private ?string $type = null;
+
     /** @var mixed[] */
     private array $items = [];
     private ?string $ref = null;

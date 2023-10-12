@@ -6,10 +6,10 @@ namespace Valantic\PimcoreApiDocumentationBundle\Model\Component;
 
 class ComponentSchemaDoc implements \JsonSerializable
 {
-    public const TYPE_OBJECT = 'object';
-
+    final public const TYPE_OBJECT = 'object';
     private string $type;
     private string $name;
+
     /** @var ComponentPropertyDoc[] */
     private array $properties;
 

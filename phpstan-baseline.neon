@@ -1,2 +1,31 @@
 parameters:
 	ignoreErrors:
+	    -
+	        message: "#^Method Valantic\\\\PimcoreApiDocumentationBundle\\\\Contract\\\\Service\\\\DocBlockParserInterface\\:\\:determineTypeHint\\(\\) has parameter \\$reflectionClass with generic class ReflectionClass but does not specify its types\\: T$#"
+	        count: 1
+	        path: src/Contract/Service/DocBlockParserInterface.php
+
+	    -
+	        message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:children\\(\\)\\.#"
+	        count: 1
+	        path: src/DependencyInjection/Configuration.php
+
+	    -
+	        message: "#^Access to an undefined property PHPStan\\\\PhpDocParser\\\\Ast\\\\PhpDoc\\\\PhpDocChildNode\\:\\:\\$value\\.#"
+	        count: 1
+	        path: src/Service/DocBlockParser.php
+
+	    -
+	        message: "#^Access to an undefined property PHPStan\\\\PhpDocParser\\\\Ast\\\\PhpDoc\\\\PhpDocChildNode\\:\\:\\$value\\.#"
+	        count: 1
+	        path: src/Service/DocBlockParser.php
+
+	    -
+	        message: "#^Method Valantic\\\\PimcoreApiDocumentationBundle\\\\Service\\\\DocBlockParser\\:\\:determineTypeHint\\(\\) has parameter \\$reflectionClass with generic class ReflectionClass but does not specify its types\\: T#"
+	        count: 1
+	        path: src/Service/DocBlockParser.php
+
+	    -
+	        message: "#^Constant PIMCORE_PRIVATE_VAR not found#"
+	        count: 1
+	        path: src/Command/DocGeneratorCommand.php

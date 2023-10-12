@@ -10,13 +10,13 @@ use Valantic\PimcoreApiDocumentationBundle\Enum\TypeEnum;
 use Valantic\PimcoreApiDocumentationBundle\Model\BaseDto;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\ComponentPropertyDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\ComponentSchemaDoc;
-use Valantic\PimcoreApiDocumentationBundle\Util\Str;
 
 readonly class SchemaGenerator implements SchemaGeneratorInterface
 {
     public function __construct(
         private DocBlockParserInterface $docBlockParser,
-    ) {}
+    ) {
+    }
 
     public function generateForDto(string $dtoClass): array
     {

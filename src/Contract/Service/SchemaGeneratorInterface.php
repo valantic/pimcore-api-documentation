@@ -10,12 +10,14 @@ interface SchemaGeneratorInterface
 {
     /**
      * @param class-string $dtoClass
+     *
      * @return ComponentSchemaDoc[]
      */
     public function generateForDto(string $dtoClass): array;
 
     /**
      * @param class-string $requestClass
+     *
      * @return ComponentSchemaDoc[]
      */
     public function generateForRequest(string $requestClass): array;

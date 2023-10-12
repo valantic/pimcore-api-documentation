@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Valantic\PimcoreApiDocumentationBundle\Util\Str;
 
 abstract class ApiRequest
 {
@@ -43,12 +42,17 @@ abstract class ApiRequest
 
         foreach ($publicProperties as $publicProperty) {
             $propertyName = $publicProperty->getName();
-            $typeHint = $publicProperty->getType()->getName();
+            $typeHint = '';
+            $propertyType = $publicProperty->getType();
+
+            if ($propertyType instanceof \ReflectionNamedType) {
+                $typeHint = $propertyType->getName();
+            }
 
             $defaultValue = $this->$propertyName ?? null;
             $propertyValue = $request->get($propertyName, $defaultValue);
 
-            if (in_array($typeHint, ['float', 'int', 'bool'])) {
+            if (in_array($typeHint, ['float', 'int', 'bool'], true)) {
                 settype($propertyValue, $typeHint);
             }
 

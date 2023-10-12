@@ -29,7 +29,7 @@ class ApiRenderController extends FrontendController
         return $this->render(
             '@NelmioApiDoc/SwaggerUi/index.html.twig',
             [
-                'swagger_data' => ['spec' => json_decode($apiDocs, true)],
+                'swagger_data' => ['spec' => json_decode($apiDocs, true, 512, JSON_THROW_ON_ERROR)],
                 'assets_mode' => $options['assets_mode'],
                 'swagger_ui_config' => $options['swagger_ui_config'],
             ]

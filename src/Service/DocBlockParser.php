@@ -6,10 +6,8 @@ namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
 use Doctrine\Common\Annotations\PhpParser;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
-use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocChildNode;
-use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
-use PHPStan\PhpDocParser\Ast\Type as PhpStanType;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocChildNode;
 use PHPStan\PhpDocParser\Lexer\Lexer;
 use PHPStan\PhpDocParser\Parser\ConstExprParser;
 use PHPStan\PhpDocParser\Parser\PhpDocParser;
@@ -19,9 +17,9 @@ use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocBlockParserInterf
 
 class DocBlockParser implements DocBlockParserInterface
 {
-    private PhpParser $phpParser;
-    private Lexer $lexer;
-    private PhpDocParser $phpDocParser;
+    private readonly PhpParser $phpParser;
+    private readonly Lexer $lexer;
+    private readonly PhpDocParser $phpDocParser;
 
     public function __construct()
     {
@@ -57,14 +55,14 @@ class DocBlockParser implements DocBlockParserInterface
         return $docBlockData;
     }
 
-    public function determineTypeHint(PhpDocTagNode $docBlock, \ReflectionClass $reflectionClass): array
+    public function determineTypeHint(PhpDocChildNode $docBlock, \ReflectionClass $reflectionClass): array
     {
         $useStatements = $this->phpParser->parseUseStatements($reflectionClass);
 
         $typeHint = $docBlock->value->type->type->name;
 
-        if (array_key_exists(strtolower($typeHint), $useStatements)) {
-            return [$useStatements[strtolower($typeHint)]];
+        if (array_key_exists(strtolower((string) $typeHint), $useStatements)) {
+            return [$useStatements[strtolower((string) $typeHint)]];
         }
 
         $classTypeHint = sprintf('%s\\%s', $reflectionClass->getNamespaceName(), $typeHint);
