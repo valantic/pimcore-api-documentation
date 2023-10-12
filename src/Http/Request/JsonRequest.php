@@ -19,7 +19,9 @@ abstract class JsonRequest extends ApiRequest
         foreach ($publicProperties as $publicProperty) {
             $propertyName = $publicProperty->getName();
 
-            $this->$propertyName = $requestContent[$propertyName] ?? $requestContent[Str::snake($propertyName)] ?? null;
+            $defaultValue = $this->$propertyName ?? null;
+
+            $this->$propertyName = $requestContent[$propertyName] ?? $defaultValue;
         }
     }
 }

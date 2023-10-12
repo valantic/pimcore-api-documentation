@@ -112,7 +112,7 @@ readonly class SchemaGenerator implements SchemaGeneratorInterface
                 continue;
             }
 
-            $propertyDoc->setName(Str::snake($requestParameter->getName()));
+            $propertyDoc->setName($requestParameter->getName());
             $propertyDoc->setType(TypeEnum::from($requestParameter->getType()->getName())->swaggerEnum());
 
             $propertiesData[] = $propertyDoc;

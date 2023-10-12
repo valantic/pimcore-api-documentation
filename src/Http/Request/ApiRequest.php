@@ -43,22 +43,16 @@ abstract class ApiRequest
 
         foreach ($publicProperties as $publicProperty) {
             $propertyName = $publicProperty->getName();
-
-            $snakeCasePropertyName = Str::snake($propertyName);
+            $typeHint = $publicProperty->getType()->getName();
 
             $defaultValue = $this->$propertyName ?? null;
+            $propertyValue = $request->get($propertyName, $defaultValue);
 
-            if (
-                $request->attributes->has($propertyName)
-                || $request->query->has($propertyName)
-                || $request->request->has($propertyName)
-            ) {
-                $this->$propertyName = $request->get($snakeCasePropertyName, $defaultValue);
-
-                continue;
+            if (in_array($typeHint, ['float', 'int', 'bool'])) {
+                settype($propertyValue, $typeHint);
             }
 
-            $this->$propertyName = $request->get($propertyName, $defaultValue);
+            $this->$propertyName = $propertyValue;
         }
     }
 }

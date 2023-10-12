@@ -144,7 +144,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                 $parameterDoc = new ParameterDoc();
 
                 $parameterDoc
-                    ->setName(Str::snake($requestParameter->getName()))
+                    ->setName($requestParameter->getName())
                     ->setIn(ParameterDoc::IN_QUERY)
                     ->setRequired(false)
                     ->setSchema([
