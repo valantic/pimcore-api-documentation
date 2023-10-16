@@ -12,9 +12,12 @@ enum TypeEnum: string
             self::ARRAY => 'array',
             self::INT => 'integer',
             self::STRING => 'string',
+            self::FLOAT => 'number',
         };
     }
+
     case ARRAY = 'array';
     case INT = 'int';
     case STRING = 'string';
+    case FLOAT = 'float';
 }
