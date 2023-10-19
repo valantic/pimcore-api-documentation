@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequest;
@@ -20,8 +21,10 @@ use Valantic\PimcoreApiDocumentationBundle\Model\Doc\RouteDoc;
 
 readonly class ControllerMethodParser implements ControllerMethodParserInterface
 {
-    public function __construct(private SchemaGeneratorInterface $schemaGenerator)
-    {
+    public function __construct(
+        private SchemaGeneratorInterface $schemaGenerator,
+        private UrlGeneratorInterface $urlGenerator,
+    ) {
     }
 
     public function parseMethod(\ReflectionMethod $method): MethodDoc
@@ -61,7 +64,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             throw new \Exception('Route not defined.');
         }
 
-        $path = $routeAttributeArguments['path'];
+        $path = $this->urlGenerator->generate($routeAttributeArguments['name']);
         preg_match_all('/{([^}]+)}/', (string) $path, $routeParameters);
 
         $parsedParameters = [];
