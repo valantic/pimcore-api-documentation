@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-json": "*",
         "pimcore/pimcore": "^11.0",
         "nelmio/api-doc-bundle": "^4.12"
