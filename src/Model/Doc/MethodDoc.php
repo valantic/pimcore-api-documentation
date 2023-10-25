@@ -11,7 +11,7 @@ class MethodDoc implements \JsonSerializable
 {
     private string $name;
     private RouteDoc $routeDoc;
-    private RequestDoc $requestDoc;
+    private ?RequestDoc $requestDoc = null;
 
     /** @var ResponseDoc[] */
     private array $responsesDoc;
@@ -31,12 +31,12 @@ class MethodDoc implements \JsonSerializable
         return $this;
     }
 
-    public function getRequestDoc(): RequestDoc
+    public function getRequestDoc(): ?RequestDoc
     {
         return $this->requestDoc;
     }
 
-    public function setRequestDoc(RequestDoc $requestDoc): self
+    public function setRequestDoc(?RequestDoc $requestDoc): self
     {
         $this->requestDoc = $requestDoc;
 
@@ -103,11 +103,11 @@ class MethodDoc implements \JsonSerializable
         }
 
         $data = [
-            'parameters' => array_merge($this->getRouteDoc()->getParameters(), $this->getRequestDoc()->getParameters()),
+            'parameters' => array_merge($this->getRouteDoc()->getParameters(), $this->getRequestDoc()?->getParameters() ?: []),
             'responses' => $formattedResponses,
         ];
 
-        if (count($this->getRequestDoc()->getRequestBody()) !== 0) {
+        if ($this->getRequestDoc() !== null && count($this->getRequestDoc()->getRequestBody()) !== 0) {
             $data['requestBody'] = $this->getRequestDoc()->getRequestBody();
         }
 
