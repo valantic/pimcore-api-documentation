@@ -12,7 +12,7 @@ abstract class ApiResponse extends JsonResponse
      * @param string[] $headers
      */
     public function __construct(
-        mixed $data,
+        mixed $data = null,
         array $headers = [],
         bool $json = false,
     ) {
