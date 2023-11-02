@@ -120,7 +120,7 @@ readonly class SchemaGenerator implements SchemaGeneratorInterface
 
         $componentSchema = new ComponentSchemaDoc();
         $componentSchema
-            ->setName($requestReflection->getShortName())
+            ->setName($requestClass::docsDescription())
             ->setType(ComponentSchemaDoc::TYPE_OBJECT)
             ->setProperties($propertiesData);
 

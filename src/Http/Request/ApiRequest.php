@@ -27,6 +27,11 @@ abstract class ApiRequest
         return $this->validator->validate($this, groups: $this->groups());
     }
 
+    public static function docsDescription(): string
+    {
+        return basename(str_replace('\\', '/', static::class));
+    }
+
     /**
      * @return string[]
      */
