@@ -6,5 +6,8 @@ namespace Valantic\PimcoreApiDocumentationBundle\Model;
 
 abstract class BaseDto
 {
-    abstract public static function docsSchemaName(): string;
+    public static function docsSchemaName(): string
+    {
+        return basename(str_replace('\\', '/', static::class));
+    }
 }

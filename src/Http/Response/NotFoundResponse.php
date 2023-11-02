@@ -17,9 +17,4 @@ class NotFoundResponse extends ApiResponse
     {
         return false;
     }
-
-    public static function docsDescription(): string
-    {
-        return 'Not found response.';
-    }
 }

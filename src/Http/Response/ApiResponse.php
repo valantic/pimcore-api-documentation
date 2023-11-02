@@ -23,5 +23,8 @@ abstract class ApiResponse extends JsonResponse
 
     abstract public static function getDtoClass(): string|false;
 
-    abstract public static function docsDescription(): string;
+    public static function docsDescription(): string
+    {
+        return basename(str_replace('\\', '/', static::class));
+    }
 }

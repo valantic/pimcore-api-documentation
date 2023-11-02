@@ -12,9 +12,4 @@ class PaginationDto extends BaseDto
         public int $total,
     ) {
     }
-
-    public static function docsSchemaName(): string
-    {
-        return 'Pagination';
-    }
 }

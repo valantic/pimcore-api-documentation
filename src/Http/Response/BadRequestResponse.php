@@ -17,9 +17,4 @@ class BadRequestResponse extends ApiResponse
     {
         return false;
     }
-
-    public static function docsDescription(): string
-    {
-        return 'Bad request response.';
-    }
 }
