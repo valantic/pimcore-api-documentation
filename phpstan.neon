@@ -2,9 +2,9 @@ includes:
 	- phpstan-baseline.neon
 
 parameters:
+    bootstrapFiles:
+        - vendor/pimcore/pimcore/stubs/dynamic-constants.php
 
     level: 8
 
     ignoreErrors:
-
-    bootstrapFiles:

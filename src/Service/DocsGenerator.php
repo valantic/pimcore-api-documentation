@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
 use League\Csv\Exception;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Yaml\Yaml;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocsGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\ControllerDoc;
@@ -13,12 +15,11 @@ readonly class DocsGenerator implements DocsGeneratorInterface
 {
     /**
      * @param array<class-string> $controllers
-     * @param mixed[] $apiConfig
      */
     public function __construct(
         private array $controllers,
-        private array $apiConfig,
         private ControllerMethodParserInterface $controllerMethodParser,
+        private readonly ParameterBagInterface $parameterBag,
     ) {
     }
 
@@ -40,18 +41,16 @@ readonly class DocsGenerator implements DocsGeneratorInterface
             }
         }
 
-        $apiDocs = [
-            'openapi' => '3.0.3',
-            'info' => [
-                'title' => $this->apiConfig['title'],
-                'version' => $this->apiConfig['version'],
-                'description' => $this->apiConfig['description'],
-            ],
-            'paths' => $paths,
-            'components' => [
-                'schemas' => $schemas,
-            ],
-        ];
+        $baseDocsPath = $this->parameterBag->get('valantic.pimcore_api_doc.base_docs_path');
+
+        if (!is_string($baseDocsPath)) {
+            throw new \Exception('Missing base docs path.');
+        }
+
+        $apiDocs = Yaml::parse(file_get_contents($baseDocsPath) ?: '');
+
+        $apiDocs['paths'] = array_merge($apiDocs['paths'] ?? [], $paths);
+        $apiDocs['components']['schemas'] = array_merge($schemas, $apiDocs['components']['schemas'] ?? []);
 
         $this->saveFile($docsPath, $apiDocs);
     }

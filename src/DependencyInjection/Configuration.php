@@ -19,14 +19,11 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('valantic_pimcore_api_documentation');
 
         $treeBuilder->getRootNode()
+            ->addDefaultsIfNotSet()
             ->children()
-            ->scalarNode('open_api_version')->end()
-            ->arrayNode('info')
-            ->children()
-            ->scalarNode('title')->end()
-            ->scalarNode('description')->end()
-            ->scalarNode('version')->end()
-            ->end()
+            ->scalarNode('base_docs_path')
+            ->cannotBeEmpty()
+            ->defaultValue(sprintf('%s/config/api-docs/docs.yaml', PIMCORE_PROJECT_ROOT))
             ->end()
             ->end();
 
