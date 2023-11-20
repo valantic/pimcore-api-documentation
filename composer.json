@@ -1,6 +1,6 @@
 {
     "name": "valantic/pimcore-api-documentation-bundle",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "Auto generate API documentation for routes",
     "autoload": {
         "psr-4": {
