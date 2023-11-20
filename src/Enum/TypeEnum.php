@@ -13,6 +13,7 @@ enum TypeEnum: string
             self::INT => 'integer',
             self::STRING => 'string',
             self::FLOAT => 'number',
+            self::BOOLEAN => 'boolean',
         };
     }
 
@@ -20,4 +21,5 @@ enum TypeEnum: string
     case INT = 'int';
     case STRING = 'string';
     case FLOAT = 'float';
+    case BOOLEAN = 'bool';
 }
