@@ -10,6 +10,7 @@ class ComponentPropertyDoc implements \JsonSerializable
 {
     private string $name;
     private ?string $type = null;
+    private bool $nullable = false;
 
     /** @var mixed[] */
     private array $items = [];
@@ -37,6 +38,18 @@ class ComponentPropertyDoc implements \JsonSerializable
         $this->type = $type;
 
         return $this;
+    }
+
+    public function setNullable(bool $nullable): self
+    {
+        $this->nullable = $nullable;
+
+        return $this;
+    }
+
+    public function getNullable(): bool
+    {
+        return $this->nullable;
     }
 
     /**
@@ -78,6 +91,10 @@ class ComponentPropertyDoc implements \JsonSerializable
 
         if ($this->getType() !== null) {
             $data['type'] = $this->getType();
+        }
+
+        if ($this->getNullable() === true) {
+            $data['nullable'] = true;
         }
 
         if ($this->getItems() !== []) {

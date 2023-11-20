@@ -45,6 +45,7 @@ readonly class SchemaGenerator implements SchemaGeneratorInterface
 
             if (TypeEnum::tryFrom($propertyType) !== null) {
                 $propertyDoc->setType(TypeEnum::from($propertyType)->swaggerEnum());
+                $propertyDoc->setNullable($property->getType()->allowsNull());
 
                 if (TypeEnum::from($propertyType)->value === TypeEnum::ARRAY->value) {
                     if (array_key_exists($propertyName, $docBlocksTypeHints)) {

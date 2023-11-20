@@ -200,6 +200,10 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         $componentSchemas = [];
 
         foreach ($returnTypes as $returnType) {
+            if (!method_exists($returnType, 'getName')) {
+                continue;
+            }
+
             $responseClassName = $returnType->getName();
 
             if (!is_subclass_of($responseClassName, ApiResponse::class)) {
