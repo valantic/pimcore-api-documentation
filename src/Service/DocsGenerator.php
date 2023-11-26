@@ -19,7 +19,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
     public function __construct(
         private array $controllers,
         private ControllerMethodParserInterface $controllerMethodParser,
-        private readonly ParameterBagInterface $parameterBag,
+        private ParameterBagInterface $parameterBag,
     ) {
     }
 
@@ -37,7 +37,15 @@ readonly class DocsGenerator implements DocsGeneratorInterface
         foreach ($controllerDocs as $controllerDoc) {
             foreach ($controllerDoc->getMethodsDocs() as $methodDoc) {
                 $paths[$methodDoc->getRouteDoc()->getPath()][$methodDoc->getRouteDoc()->getMethod()] = $methodDoc;
-                $schemas = array_merge($schemas, $methodDoc->getComponentSchemas());
+
+                if ($methodDoc->getRequestDoc()?->getComponentSchemaDoc() !== null) {
+                    $requestSchema = $methodDoc->getRequestDoc()->getComponentSchemaDoc();
+                    $schemas[$requestSchema->getName()] = $requestSchema;
+                }
+
+                foreach ($methodDoc->getResponsesDoc() as $responseDoc) {
+                    $schemas = array_merge($schemas, $responseDoc->getComponentSchemas());
+                }
             }
         }
 

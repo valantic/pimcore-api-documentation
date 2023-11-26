@@ -12,7 +12,6 @@ use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequest;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest;
 use Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponse;
 use Valantic\PimcoreApiDocumentationBundle\Model\BaseDto;
-use Valantic\PimcoreApiDocumentationBundle\Model\Component\ComponentSchemaDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\MethodDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\ParameterDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\RequestDoc;
@@ -30,19 +29,17 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
     public function parseMethod(\ReflectionMethod $method): MethodDoc
     {
         $routeDoc = $this->parseRoute($method);
-        $requestData = $this->parseRequest($method);
-        $responsesData = $this->parseResponses($method);
+        $requestDoc = $this->parseRequest($method);
+        $responseDoc = $this->parseResponses($method);
 
         $methodDoc = new MethodDoc();
         $methodDoc
             ->setName($method->getName())
-            ->setResponsesDoc($responsesData['responses'])
-            ->setComponentSchemas($responsesData['schemas'])
+            ->setResponsesDoc($responseDoc)
             ->setRouteDoc($routeDoc);
 
-        if ($requestData !== null) {
-            $methodDoc->setRequestDoc($requestData['request']);
-            $methodDoc->setComponentSchemas(array_merge($methodDoc->getComponentSchemas(), $requestData['schemas']));
+        if ($requestDoc !== null) {
+            $methodDoc->setRequestDoc($requestDoc);
         }
 
         return $methodDoc;
@@ -101,10 +98,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         return $routeDoc;
     }
 
-    /**
-     * @return array{request: RequestDoc, schemas: array<ComponentSchemaDoc>}|null
-     */
-    private function parseRequest(\ReflectionMethod $method): ?array
+    private function parseRequest(\ReflectionMethod $method): ?RequestDoc
     {
         $parsedParameters = [];
         $schemas = [];
@@ -131,16 +125,13 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         }
 
         $requestDoc = new RequestDoc();
-
-        // @TODO refactor
         if (is_subclass_of($requestClass, JsonRequest::class)) {
-            $schemas = $this->schemaGenerator->generateForRequest($requestClass);
-
+            $requestDoc->setComponentSchemaDoc($this->schemaGenerator->generateForRequest($requestClass));
             $requestDoc->setRequestBody([
                 'content' => [
                     'application/json' => [
                         'schema' => [
-                            '$ref' => $this->schemaGenerator->formatComponentSchemaPath(array_keys($schemas)[0]),
+                            '$ref' => $this->schemaGenerator->formatComponentSchemaPath($requestClass::docsDescription()),
                         ],
                     ],
                 ],
@@ -167,14 +158,11 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             $requestDoc->setParameters($parsedParameters);
         }
 
-        return [
-            'request' => $requestDoc,
-            'schemas' => $schemas,
-        ];
+        return $requestDoc;
     }
 
     /**
-     * @return array{responses: array<ResponseDoc>, schemas: array<ComponentSchemaDoc>}
+     * @return ResponseDoc[]
      */
     private function parseResponses(\ReflectionMethod $method): array
     {
@@ -197,7 +185,6 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         }
 
         $methodResponses = [];
-        $componentSchemas = [];
 
         foreach ($returnTypes as $returnType) {
             if (!method_exists($returnType, 'getName')) {
@@ -220,8 +207,8 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
             if ($dtoClass !== false && is_subclass_of($dtoClass, BaseDto::class)) {
                 $schemaName = $dtoClass::docsSchemaName();
-                $componentSchemas = $this->schemaGenerator->generateForDto($dtoClass);
 
+                $responseDoc->setComponentSchemas($this->schemaGenerator->generateForDto($dtoClass));
                 $responseDoc->setContent([
                     'application/json' => [
                         'schema' => [
@@ -234,9 +221,6 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             $methodResponses[] = $responseDoc;
         }
 
-        return [
-            'schemas' => $componentSchemas,
-            'responses' => $methodResponses,
-        ];
+        return $methodResponses;
     }
 }

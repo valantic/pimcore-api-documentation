@@ -7,7 +7,7 @@ namespace Valantic\PimcoreApiDocumentationBundle\Http\Response;
 use Symfony\Component\HttpFoundation\Response;
 use Valantic\PimcoreApiDocumentationBundle\Model\ErrorResponseDto;
 
-class BadRequestResponse extends ApiResponse
+class InternalServerErrorResponse extends ApiResponse
 {
     public function __construct(
         mixed $data = null,
@@ -15,7 +15,7 @@ class BadRequestResponse extends ApiResponse
         bool $json = false,
     ) {
         if ($data === null) {
-            $data = new ErrorResponseDto(Response::$statusTexts[Response::HTTP_BAD_REQUEST]);
+            $data = new ErrorResponseDto(Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]);
         }
 
         parent::__construct($data, $headers, $json);
@@ -23,7 +23,7 @@ class BadRequestResponse extends ApiResponse
 
     public static function status(): int
     {
-        return Response::HTTP_BAD_REQUEST;
+        return Response::HTTP_INTERNAL_SERVER_ERROR;
     }
 
     public static function getDtoClass(): string|false

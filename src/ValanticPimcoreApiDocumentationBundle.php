@@ -9,7 +9,8 @@ use Pimcore\Extension\Bundle\PimcoreBundleAdminClassicInterface;
 use Pimcore\Extension\Bundle\Traits\BundleAdminClassicTrait;
 use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Valantic\PimcoreApiDocumentationBundle\DependencyInjection\CompilerPass\DocsGeneratorCompilerPass;
+use Valantic\PimcoreApiDocumentationBundle\DependencyInjection\CompilerPass\ApiControllerCompilerPass;
+use Valantic\PimcoreApiDocumentationBundle\DependencyInjection\CompilerPass\DataTypeParserCompilerPass;
 
 class ValanticPimcoreApiDocumentationBundle extends AbstractPimcoreBundle implements PimcoreBundleAdminClassicInterface
 {
@@ -27,7 +28,8 @@ class ValanticPimcoreApiDocumentationBundle extends AbstractPimcoreBundle implem
     {
         parent::build($container);
 
-        $container->addCompilerPass(new DocsGeneratorCompilerPass());
+        $container->addCompilerPass(new ApiControllerCompilerPass());
+        $container->addCompilerPass(new DataTypeParserCompilerPass());
     }
 
     protected function getComposerPackageName(): string

@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocsGeneratorInterface;
 
-class DocsGeneratorCompilerPass implements CompilerPassInterface
+class ApiControllerCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {

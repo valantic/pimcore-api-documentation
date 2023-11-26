@@ -4,13 +4,36 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Model\Doc;
 
+use Valantic\PimcoreApiDocumentationBundle\Model\Component\ComponentSchemaDoc;
+
 class ResponseDoc implements \JsonSerializable
 {
     private int $status;
     private string $description;
 
+    /** @var ComponentSchemaDoc[] */
+    private array $componentSchemas = [];
+
     /** @var mixed[] */
     private array $content = [];
+
+    /**
+     * @return ComponentSchemaDoc[]
+     */
+    public function getComponentSchemas(): array
+    {
+        return $this->componentSchemas;
+    }
+
+    /**
+     * @param ComponentSchemaDoc[] $componentSchemas
+     */
+    public function setComponentSchemas(array $componentSchemas): ResponseDoc
+    {
+        $this->componentSchemas = $componentSchemas;
+
+        return $this;
+    }
 
     public function getStatus(): int
     {

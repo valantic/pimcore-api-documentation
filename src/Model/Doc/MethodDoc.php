@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Model\Doc;
 
-use Valantic\PimcoreApiDocumentationBundle\Model\Component\ComponentSchemaDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\RequestDoc;
 
 class MethodDoc implements \JsonSerializable
@@ -15,9 +14,6 @@ class MethodDoc implements \JsonSerializable
 
     /** @var ResponseDoc[] */
     private array $responsesDoc;
-
-    /** @var ComponentSchemaDoc[] */
-    private array $componentSchemas;
 
     public function getRouteDoc(): RouteDoc
     {
@@ -69,24 +65,6 @@ class MethodDoc implements \JsonSerializable
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return ComponentSchemaDoc[]
-     */
-    public function getComponentSchemas(): array
-    {
-        return $this->componentSchemas;
-    }
-
-    /**
-     * @param ComponentSchemaDoc[] $componentSchemas
-     */
-    public function setComponentSchemas(array $componentSchemas): self
-    {
-        $this->componentSchemas = $componentSchemas;
 
         return $this;
     }

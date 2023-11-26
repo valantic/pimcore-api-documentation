@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Model\Component;
 
+use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractPropertyDoc;
+
 class ComponentSchemaDoc implements \JsonSerializable
 {
     final public const TYPE_OBJECT = 'object';
     private string $type;
     private string $name;
 
-    /** @var ComponentPropertyDoc[] */
+    /** @var AbstractPropertyDoc[] */
     private array $properties;
 
     public function getType(): string
@@ -26,7 +28,7 @@ class ComponentSchemaDoc implements \JsonSerializable
     }
 
     /**
-     * @return ComponentPropertyDoc[]
+     * @return AbstractPropertyDoc[]
      */
     public function getProperties(): array
     {
@@ -34,7 +36,7 @@ class ComponentSchemaDoc implements \JsonSerializable
     }
 
     /**
-     * @param ComponentPropertyDoc[] $properties
+     * @param AbstractPropertyDoc[] $properties
      */
     public function setProperties(array $properties): self
     {

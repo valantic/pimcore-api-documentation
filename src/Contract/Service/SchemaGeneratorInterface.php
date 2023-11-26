@@ -18,10 +18,8 @@ interface SchemaGeneratorInterface
 
     /**
      * @param class-string<ApiRequest> $requestClass
-     *
-     * @return ComponentSchemaDoc[]
      */
-    public function generateForRequest(string $requestClass): array;
+    public function generateForRequest(string $requestClass): ComponentSchemaDoc;
 
     public function formatComponentSchemaPath(string $schemaName): string;
 }

@@ -23,6 +23,10 @@ services:
     #            - "plain_value"
     #            - "%parameter%"
 
+    Valantic\PimcoreApiDocumentationBundle\Service\DataTypeParser\:
+        resource: '../../Service/DataTypeParser'
+        tags: ['valantic.pimcore_api_doc.data_type_parser']
+
     Valantic\PimcoreApiDocumentationBundle\Command\DocGeneratorCommand: ~
 
     Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocsGeneratorInterface:
@@ -36,3 +40,6 @@ services:
 
     Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocBlockParserInterface:
         class: Valantic\PimcoreApiDocumentationBundle\Service\DocBlockParser
+
+    Valantic\PimcoreApiDocumentationBundle\Contract\Service\ComponentPropertyDocGeneratorInterface:
+        class: Valantic\PimcoreApiDocumentationBundle\Service\ComponentPropertyDocGenerator

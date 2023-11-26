@@ -4,13 +4,29 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request;
 
+use Valantic\PimcoreApiDocumentationBundle\Model\Component\ComponentSchemaDoc;
+
 class RequestDoc
 {
+    private ?ComponentSchemaDoc $componentSchemaDoc = null;
+
     /** @var ParameterDoc[] */
     private array $parameters = [];
 
     /** @var mixed[] */
     private array $requestBody = [];
+
+    public function getComponentSchemaDoc(): ?ComponentSchemaDoc
+    {
+        return $this->componentSchemaDoc;
+    }
+
+    public function setComponentSchemaDoc(?ComponentSchemaDoc $componentSchemaDoc): RequestDoc
+    {
+        $this->componentSchemaDoc = $componentSchemaDoc;
+
+        return $this;
+    }
 
     /**
      * @return ParameterDoc[]
