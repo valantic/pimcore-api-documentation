@@ -13,8 +13,7 @@ readonly class SchemaGenerator implements SchemaGeneratorInterface
 {
     public function __construct(
         private ComponentPropertyDocGeneratorInterface $componentPropertyDocGenerator,
-    ) {
-    }
+    ) {}
 
     public function generateForDto(string $dtoClass): array
     {

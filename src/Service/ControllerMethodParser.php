@@ -23,8 +23,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
     public function __construct(
         private SchemaGeneratorInterface $schemaGenerator,
         private RouterInterface $router,
-    ) {
-    }
+    ) {}
 
     public function parseMethod(\ReflectionMethod $method): MethodDoc
     {
@@ -125,6 +124,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         }
 
         $requestDoc = new RequestDoc();
+
         if (is_subclass_of($requestClass, JsonRequest::class)) {
             $requestDoc->setComponentSchemaDoc($this->schemaGenerator->generateForRequest($requestClass));
             $requestDoc->setRequestBody([
@@ -169,11 +169,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         $methodReturnType = $method->getReturnType();
 
         if ($methodReturnType === null) {
-            throw new \Exception(sprintf(
-                'Missing return type for method %s::%s',
-                $method->getDeclaringClass()->getName(),
-                $method->getName()
-            ));
+            throw new \Exception(sprintf('Missing return type for method %s::%s', $method->getDeclaringClass()->getName(), $method->getName()));
         }
 
         $returnTypes = [];

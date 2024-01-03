@@ -27,7 +27,7 @@ class ArrayPropertyDoc extends AbstractPropertyDoc implements ComponentSchemaPro
     /**
      * @param mixed[] $items
      */
-    public function setItems(array $items): ArrayPropertyDoc
+    public function setItems(array $items): self
     {
         $this->items = $items;
 

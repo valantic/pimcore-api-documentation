@@ -20,8 +20,7 @@ readonly class ArrayParser implements DataTypeParserInterface
     public function __construct(
         private DocBlockParserInterface $docBlockParser,
         private SchemaGeneratorInterface $schemaGenerator,
-    ) {
-    }
+    ) {}
 
     public function parse(\ReflectionProperty $reflectionProperty): AbstractPropertyDoc
     {
@@ -29,6 +28,7 @@ readonly class ArrayParser implements DataTypeParserInterface
         $declaringClassReflection = new \ReflectionClass($reflectionProperty->getDeclaringClass()->getName());
 
         $docBlocksTypeHints = [];
+
         if ($declaringClassReflection->getMethod('__construct')->getDocComment() !== false) {
             $docBlocksTypeHints = $this->docBlockParser->parseDocBlock(
                 $declaringClassReflection->getMethod('__construct')->getDocComment()
@@ -36,11 +36,13 @@ readonly class ArrayParser implements DataTypeParserInterface
         }
 
         $typeHints = [];
+
         if (isset($docBlocksTypeHints[$propertyName])) {
             $typeHints = $this->docBlockParser->determineTypeHint($docBlocksTypeHints[$propertyName], $declaringClassReflection);
         }
 
         $arrayItems = [];
+
         if (count($typeHints) !== 0) {
             foreach ($typeHints as $typeHint) {
                 if (is_subclass_of($typeHint, BaseDto::class)) {
