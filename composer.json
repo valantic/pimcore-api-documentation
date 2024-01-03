@@ -1,62 +1,76 @@
 {
-    "name": "valantic/pimcore-api-documentation-bundle",
-    "version": "0.2.1",
-    "description": "Auto generate API documentation for routes",
-    "autoload": {
-        "psr-4": {
-            "Valantic\\PimcoreApiDocumentationBundle\\": "src/"
-        }
+  "name": "valantic/pimcore-api-documentation-bundle",
+  "version": "0.2.1",
+  "description": "Auto generate API documentation for routes",
+  "keywords": [
+    "valantic",
+    "pimcore-api-documentation-bundle"
+  ],
+  "homepage": "https://github.com/valantic/pimcore-api-documentation-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dino Turopoli",
+      "email": "dino.turopoli@factory.dev"
     },
-    "authors": [
-        {
-            "name": "Dino Turopoli",
-            "email": "dino.turopoli@factory.dev"
-        }
-    ],
-    "require": {
-        "php": "^8.2",
-        "ext-json": "*",
-        "pimcore/pimcore": "^11.0",
-        "nelmio/api-doc-bundle": "^4.12"
-    },
-    "require-dev": {
-        "bamarni/composer-bin-plugin": "^1.8.2",
-        "phpstan/phpstan": "^1.10.39",
-        "rector/rector": "^0.17.13",
-        "roave/security-advisories": "dev-latest"
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "@composer bin all install --ansi"
-        ],
-        "post-update-cmd": [
-            "@composer bump -D",
-            "@composer bin all update --ansi",
-            "@composer bin all bump"
-        ],
-        "rector": [
-            "./vendor/bin/rector process"
-        ],
-        "phpstan": [
-            "vendor/bin/phpstan analyse src --memory-limit=1G"
-        ],
-        "php-cs-fixer": [
-            "vendor-bin/phpcs/vendor/bin/php-cs-fixer fix -v --diff"
-        ],
-        "php-cs-fixer-check": [
-            "vendor-bin/phpcs/vendor/bin/php-cs-fixer fix --diff --dry-run"
-        ]
-    },
-    "prefer-stable": false,
-    "config": {
-        "allow-plugins": {
-            "bamarni/composer-bin-plugin": true
-        }
-    },
-    "extra": {
-        "bamarni-bin": {
-            "bin-links": false,
-            "forward-command": true
-        }
+    {
+      "name": "Linus Metzler",
+      "email": "linus.metzler@cec.valantic.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Valantic\\PimcoreApiDocumentationBundle\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^8.2",
+    "ext-json": "*",
+    "pimcore/pimcore": "^11.0",
+    "nelmio/api-doc-bundle": "^4.12"
+  },
+  "require-dev": {
+    "bamarni/composer-bin-plugin": "^1.8.2",
+    "phpstan/extension-installer": "^1.3.1",
+    "phpstan/phpstan": "^1.10.50",
+    "phpstan/phpstan-deprecation-rules": "^1.1.4",
+    "phpstan/phpstan-strict-rules": "^1.5.2",
+    "roave/security-advisories": "dev-latest",
+    "rector/rector": "^0.18.13"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@composer bin all install --ansi"
+    ],
+    "post-update-cmd": [
+      "@composer bump -D",
+      "@composer bin all update --ansi",
+      "@composer bin all bump"
+    ],
+    "rector": [
+      "./vendor/bin/rector process"
+    ],
+    "phpstan": [
+      "vendor/bin/phpstan analyse src --memory-limit=1G"
+    ],
+    "php-cs-fixer": [
+      "vendor-bin/phpcs/vendor/bin/php-cs-fixer fix -v --diff"
+    ],
+    "php-cs-fixer-check": [
+      "vendor-bin/phpcs/vendor/bin/php-cs-fixer fix --diff --dry-run"
+    ]
+  },
+  "prefer-stable": false,
+  "config": {
+    "allow-plugins": {
+      "bamarni/composer-bin-plugin": true,
+      "phpstan/extension-installer": true
+    }
+  },
+  "extra": {
+    "bamarni-bin": {
+      "bin-links": false,
+      "forward-command": true
+    }
+  }
 }
