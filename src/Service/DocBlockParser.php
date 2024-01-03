@@ -6,8 +6,8 @@ namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
 use Doctrine\Common\Annotations\PhpParser;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
-use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocChildNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
 use PHPStan\PhpDocParser\Lexer\Lexer;
 use PHPStan\PhpDocParser\Parser\ConstExprParser;
 use PHPStan\PhpDocParser\Parser\PhpDocParser;
@@ -66,6 +66,7 @@ class DocBlockParser implements DocBlockParserInterface
         }
 
         $classTypeHint = sprintf('%s\\%s', $reflectionClass->getNamespaceName(), $typeHint);
+
         if (class_exists($classTypeHint)) {
             return [$classTypeHint];
         }

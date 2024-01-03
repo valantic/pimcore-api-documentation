@@ -10,7 +10,7 @@ abstract class JsonRequest extends ApiRequest
 {
     protected function hydrate(Request $request): void
     {
-        $requestContent = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $requestContent = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
 
         $reflectionObject = new \ReflectionObject($this);
         $publicProperties = $reflectionObject->getProperties(\ReflectionProperty::IS_PUBLIC);

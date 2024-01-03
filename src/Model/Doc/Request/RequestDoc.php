@@ -21,7 +21,7 @@ class RequestDoc
         return $this->componentSchemaDoc;
     }
 
-    public function setComponentSchemaDoc(?ComponentSchemaDoc $componentSchemaDoc): RequestDoc
+    public function setComponentSchemaDoc(?ComponentSchemaDoc $componentSchemaDoc): self
     {
         $this->componentSchemaDoc = $componentSchemaDoc;
 

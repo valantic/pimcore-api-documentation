@@ -16,7 +16,7 @@ class DtoPropertyDoc extends AbstractPropertyDoc implements ComponentSchemaPrope
         return $this->ref;
     }
 
-    public function setRef(?string $ref): DtoPropertyDoc
+    public function setRef(?string $ref): self
     {
         $this->ref = $ref;
 

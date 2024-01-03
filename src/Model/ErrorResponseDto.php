@@ -12,6 +12,5 @@ class ErrorResponseDto extends BaseDto
     public function __construct(
         public string $message = 'Error response.',
         public array $errors = [],
-    ) {
-    }
+    ) {}
 }

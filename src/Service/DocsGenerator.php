@@ -20,8 +20,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
         private array $controllers,
         private ControllerMethodParserInterface $controllerMethodParser,
         private ParameterBagInterface $parameterBag,
-    ) {
-    }
+    ) {}
 
     public function generate(string $docsPath): void
     {
@@ -110,7 +109,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
     {
         $file = fopen($filePath, 'w');
 
-        $jsonContent = json_encode($content, JSON_THROW_ON_ERROR);
+        $jsonContent = json_encode($content, \JSON_THROW_ON_ERROR);
 
         if ($file !== false && $jsonContent !== false) {
             fwrite($file, $jsonContent);
