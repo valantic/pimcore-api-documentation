@@ -47,7 +47,7 @@
       "./vendor/bin/rector process"
     ],
     "phpstan": [
-      "vendor/bin/phpstan analyse src --memory-limit=1G"
+      "vendor/bin/phpstan analyse --memory-limit=1G"
     ],
     "php-cs-fixer": [
       "vendor-bin/phpcs/vendor/bin/php-cs-fixer fix -v --diff"
