@@ -34,6 +34,6 @@ class ValanticPimcoreApiDocumentationBundle extends AbstractPimcoreBundle implem
 
     protected function getComposerPackageName(): string
     {
-        return 'valantic/pimcore-api-documentation-bundle';
+        return 'valantic/pimcore-api-documentation';
     }
 }

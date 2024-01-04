@@ -1,12 +1,8 @@
 {
-  "name": "valantic/pimcore-api-documentation-bundle",
+  "name": "valantic/pimcore-api-documentation",
   "version": "0.2.1",
   "description": "Auto generate API documentation for routes",
-  "keywords": [
-    "valantic",
-    "pimcore-api-documentation-bundle"
-  ],
-  "homepage": "https://github.com/valantic/pimcore-api-documentation-bundle",
+  "homepage": "https://github.com/valantic/pimcore-api-documentation",
   "license": "MIT",
   "authors": [
     {
