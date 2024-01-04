@@ -10,20 +10,60 @@ Bundle is used for generating API documentation based on API controllers.
 
 ## Requirements
 
-**TODO:** Add more detailed description
-
 - Pimcore >= 11.0.0
 
 ## Installation
 
-**TODO:** Add more detailed description
+1. `composer require valantic/pimcore-api-documentation`
+2. Add `ValanticPimcoreApiDocumentationBundle` to `config/bundles.php`
 
-Install as pimcore bundle
 
 ## Usage
 
-**TODO:** Add more detailed description
+```php
+class ProductController extends \Valantic\PimcoreApiDocumentationBundle\Controller\ApiController
+{
+    #[Route(path: '/product', name: 'rest_api_product_create', methods: Request::METHOD_POST)]
+    public function create(ProductCreateRequest $request): ProductCreateResponse|\Valantic\PimcoreApiDocumentationBundle\Http\Response\BadRequestResponse
+    {
+        $errors = $this->validateRequest($request);
 
-- Add `@ApiDoc` annotation to your controller actions
-- Run command `bin/console api:documentation:generate`
-- Open `https://{your-pimcore-host}/documentation-api`
+        if (count($errors) !== 0) {
+            return new \Valantic\PimcoreApiDocumentationBundle\Http\Response\BadRequestResponse($errors);
+        }
+
+        return new ProductCreateResponse(/* ... */);
+    }
+}
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+class ProductCreateRequest extends \Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest
+{
+    #[Assert\NotBlank]
+    public ?string $name = null;
+
+    #[Assert\NotBlank]
+    public ?string $description = null;
+}
+
+class ProductCreateResponse extends \Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponse
+{
+    public static function status(): int
+    {
+        return \Symfony\Component\HttpFoundation\Response::HTTP_CREATED;
+    }
+
+    public static function getDtoClass(): string|false
+    {
+        return ProductCreateDto::class;
+    }
+}
+
+class ProductCreateDto extends \Valantic\PimcoreApiDocumentationBundle\Model\BaseDto
+{
+    public function __construct(
+        public ?int $id,
+    ) {}
+}
+```
