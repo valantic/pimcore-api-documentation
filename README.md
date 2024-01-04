@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/valantic/pimcore-api-documentation.svg?style=flat-square)](https://packagist.org/packages/valantic/pimcore-api-documentation)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![PHP Checks](https://github.com/valantic/pimcore-api-documentation/actions/workflows/php.yml/badge.svg)](https://github.com/valantic/pimcore-api-documentation/actions/workflows/php.yml)
+[![PHP Checks](https://github.com/valantic/pimcore-api-documentation/actions/workflows/phpstan.yml/badge.svg)](https://github.com/valantic/pimcore-api-documentation/actions/workflows/phpstan.yml)
 
 This package is developed by [valantic CEC Schweiz](https://www.valantic.com/en/services/digital-business/) and is under active development.
 
