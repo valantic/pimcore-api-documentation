@@ -17,8 +17,7 @@ readonly class DtoParser implements DataTypeParserInterface
 {
     public function __construct(
         private SchemaGeneratorInterface $schemaGenerator,
-    ) {
-    }
+    ) {}
 
     public function parse(\ReflectionProperty $reflectionProperty): AbstractPropertyDoc
     {

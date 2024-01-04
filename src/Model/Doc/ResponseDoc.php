@@ -28,7 +28,7 @@ class ResponseDoc implements \JsonSerializable
     /**
      * @param ComponentSchemaDoc[] $componentSchemas
      */
-    public function setComponentSchemas(array $componentSchemas): ResponseDoc
+    public function setComponentSchemas(array $componentSchemas): self
     {
         $this->componentSchemas = $componentSchemas;
 

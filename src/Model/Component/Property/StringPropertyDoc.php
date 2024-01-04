@@ -13,7 +13,7 @@ class StringPropertyDoc extends AbstractPropertyDoc
         return $this->format;
     }
 
-    public function setFormat(?string $format): StringPropertyDoc
+    public function setFormat(?string $format): self
     {
         $this->format = $format;
 

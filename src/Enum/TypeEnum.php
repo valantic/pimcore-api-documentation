@@ -6,6 +6,12 @@ namespace Valantic\PimcoreApiDocumentationBundle\Enum;
 
 enum TypeEnum: string
 {
+    case ARRAY = 'array';
+    case INT = 'int';
+    case STRING = 'string';
+    case FLOAT = 'float';
+    case BOOLEAN = 'bool';
+
     public function swaggerEnum(): string
     {
         return match ($this) {
@@ -16,10 +22,4 @@ enum TypeEnum: string
             self::BOOLEAN => 'boolean',
         };
     }
-
-    case ARRAY = 'array';
-    case INT = 'int';
-    case STRING = 'string';
-    case FLOAT = 'float';
-    case BOOLEAN = 'bool';
 }

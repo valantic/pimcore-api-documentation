@@ -10,6 +10,5 @@ class PaginationDto extends BaseDto
         public int $page,
         public int $perPage,
         public int $total,
-    ) {
-    }
+    ) {}
 }
