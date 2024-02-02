@@ -6,7 +6,7 @@ namespace Valantic\PimcoreApiDocumentationBundle\Http\Response;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-abstract class ApiResponse extends JsonResponse
+abstract class AbstractApiResponse extends JsonResponse implements ApiResponseInterface
 {
     /**
      * @param string[] $headers
@@ -17,14 +17,5 @@ abstract class ApiResponse extends JsonResponse
         bool $json = false,
     ) {
         parent::__construct($data, static::status(), $headers, $json);
-    }
-
-    abstract public static function status(): int;
-
-    abstract public static function getDtoClass(): string|false;
-
-    public static function docsDescription(): string
-    {
-        return basename(str_replace('\\', '/', static::class));
     }
 }

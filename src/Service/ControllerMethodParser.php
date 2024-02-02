@@ -23,6 +23,8 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         private SchemaGeneratorInterface $schemaGenerator,
         private RouterInterface $router,
         private DtoDecorator $dtoDecorator,
+        private RequestDecorator $requestDecorator,
+        private ResponseDecorator $responseDecorator,
     ) {}
 
     public function parseMethod(\ReflectionMethod $method): MethodDoc
@@ -130,7 +132,9 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                 'content' => [
                     'application/json' => [
                         'schema' => [
-                            '$ref' => $this->schemaGenerator->formatComponentSchemaPath($requestClass::docsDescription()),
+                            '$ref' => $this->schemaGenerator->formatComponentSchemaPath(
+                                $this->requestDecorator->getDocsDescription($requestClass)
+                            ),
                         ],
                     ],
                 ],
@@ -186,6 +190,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                 continue;
             }
 
+            /** @var class-string $responseClassName */
             $responseClassName = $returnType->getName();
 
             if (!is_subclass_of($responseClassName, AbstractApiResponse::class)) {
@@ -198,7 +203,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
             $responseDoc
                 ->setStatus($responseClassName::status())
-                ->setDescription($responseClassName::docsDescription());
+                ->setDescription($this->responseDecorator->getDocsDescription($responseClassName));
 
             if ($dtoClass !== false) {
                 $schemaName = $this->dtoDecorator->getDocsDescription($dtoClass);

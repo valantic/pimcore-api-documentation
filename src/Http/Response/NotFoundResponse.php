@@ -7,7 +7,7 @@ namespace Valantic\PimcoreApiDocumentationBundle\Http\Response;
 use Symfony\Component\HttpFoundation\Response;
 use Valantic\PimcoreApiDocumentationBundle\Model\ErrorResponseDto;
 
-class NotFoundResponse extends ApiResponse
+class NotFoundResponse extends AbstractApiResponse
 {
     public function __construct(
         mixed $data = null,
