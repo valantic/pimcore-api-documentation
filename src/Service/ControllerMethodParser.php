@@ -10,7 +10,7 @@ use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodPars
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequest;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest;
-use Valantic\PimcoreApiDocumentationBundle\Http\Response\AbstractApiResponse;
+use Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponseInterface;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\MethodDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\ParameterDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\RequestDoc;
@@ -193,7 +193,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             /** @var class-string $responseClassName */
             $responseClassName = $returnType->getName();
 
-            if (!is_subclass_of($responseClassName, AbstractApiResponse::class)) {
+            if (!is_a($responseClassName, ApiResponseInterface::class, true)) {
                 continue;
             }
 
