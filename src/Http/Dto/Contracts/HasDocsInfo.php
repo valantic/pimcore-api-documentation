@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Valantic\PimcoreApiDocumentationBundle\Model\Contracts;
+namespace Valantic\PimcoreApiDocumentationBundle\Http\Dto\Contracts;
 
 interface HasDocsInfo
 {

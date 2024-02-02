@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
-use Valantic\PimcoreApiDocumentationBundle\Model\Contracts\HasDocsInfo;
+use Valantic\PimcoreApiDocumentationBundle\Http\Dto\Contracts\HasDocsInfo;
 use Valantic\PimcoreApiDocumentationBundle\Util\Str;
 
 class DtoDecorator

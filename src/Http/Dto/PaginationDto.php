@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Valantic\PimcoreApiDocumentationBundle\Model;
+namespace Valantic\PimcoreApiDocumentationBundle\Http\Dto;
 
 class PaginationDto
 {
