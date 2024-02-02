@@ -12,7 +12,7 @@ use Valantic\PimcoreApiDocumentationBundle\Command\DocGeneratorCommand;
 
 class ApiRenderController extends FrontendController
 {
-    #[Route('/documentation-api')]
+    #[Route('%valantic.pimcore_api_doc.docs_route%')]
     public function renderApi(): Response
     {
         $options = [
