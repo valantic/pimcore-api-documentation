@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Controller;
 
-use Pimcore\Controller\FrontendController;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequest;
 
-#[AutoconfigureTag('valantic.pimcore_api_doc.controller')]
-abstract class ApiController extends FrontendController
+trait ApiControllerTrait
 {
     /**
      * @return array<string, array<int, array<int, string|\Stringable>>>
