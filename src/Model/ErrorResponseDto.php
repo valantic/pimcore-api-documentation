@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Model;
 
-class ErrorResponseDto extends BaseDto
+class ErrorResponseDto
 {
     /**
      * @param string[] $errors

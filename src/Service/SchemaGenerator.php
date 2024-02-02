@@ -13,12 +13,13 @@ readonly class SchemaGenerator implements SchemaGeneratorInterface
 {
     public function __construct(
         private ComponentPropertyDocGeneratorInterface $componentPropertyDocGenerator,
+        private DtoDecorator $dtoDecorator,
     ) {}
 
     public function generateForDto(string $dtoClass): array
     {
         $dtoReflection = new \ReflectionClass($dtoClass);
-        $schemaName = $dtoClass::docsSchemaName();
+        $schemaName = $this->dtoDecorator->getDocsDescription($dtoClass);
 
         $propertiesData = [];
 

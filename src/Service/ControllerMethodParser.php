@@ -10,8 +10,7 @@ use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodPars
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequest;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest;
-use Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponse;
-use Valantic\PimcoreApiDocumentationBundle\Model\BaseDto;
+use Valantic\PimcoreApiDocumentationBundle\Http\Response\AbstractApiResponse;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\MethodDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\ParameterDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\RequestDoc;
@@ -23,6 +22,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
     public function __construct(
         private SchemaGeneratorInterface $schemaGenerator,
         private RouterInterface $router,
+        private DtoDecorator $dtoDecorator,
     ) {}
 
     public function parseMethod(\ReflectionMethod $method): MethodDoc
@@ -188,7 +188,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
             $responseClassName = $returnType->getName();
 
-            if (!is_subclass_of($responseClassName, ApiResponse::class)) {
+            if (!is_subclass_of($responseClassName, AbstractApiResponse::class)) {
                 continue;
             }
 
@@ -200,8 +200,8 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                 ->setStatus($responseClassName::status())
                 ->setDescription($responseClassName::docsDescription());
 
-            if ($dtoClass !== false && is_subclass_of($dtoClass, BaseDto::class)) {
-                $schemaName = $dtoClass::docsSchemaName();
+            if ($dtoClass !== false) {
+                $schemaName = $this->dtoDecorator->getDocsDescription($dtoClass);
 
                 $responseDoc->setComponentSchemas($this->schemaGenerator->generateForDto($dtoClass));
                 $responseDoc->setContent([

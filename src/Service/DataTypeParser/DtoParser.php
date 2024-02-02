@@ -6,9 +6,9 @@ namespace Valantic\PimcoreApiDocumentationBundle\Service\DataTypeParser;
 
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
-use Valantic\PimcoreApiDocumentationBundle\Model\BaseDto;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractPropertyDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\DtoPropertyDoc;
+use Valantic\PimcoreApiDocumentationBundle\Service\DtoDecorator;
 
 /**
  * @implements DataTypeParserInterface<DtoPropertyDoc>
@@ -17,6 +17,7 @@ readonly class DtoParser implements DataTypeParserInterface
 {
     public function __construct(
         private SchemaGeneratorInterface $schemaGenerator,
+        private DtoDecorator $dtoDecorator,
     ) {}
 
     public function parse(\ReflectionProperty $reflectionProperty): AbstractPropertyDoc
@@ -25,17 +26,14 @@ readonly class DtoParser implements DataTypeParserInterface
             throw new \Exception('Unsupported type.');
         }
 
+        /** @var class-string $dtoClass */
         $dtoClass = $reflectionProperty->getType()->getName();
-
-        if (!is_subclass_of($dtoClass, BaseDto::class)) {
-            throw new \Exception('Unsupported type.');
-        }
 
         $schemas = $this->schemaGenerator->generateForDto($dtoClass);
 
         $propertyDoc = new DtoPropertyDoc();
 
-        $ref = $this->schemaGenerator->formatComponentSchemaPath($dtoClass::docsSchemaName());
+        $ref = $this->schemaGenerator->formatComponentSchemaPath($this->dtoDecorator->getDocsDescription($dtoClass));
 
         $propertyDoc
             ->setName($reflectionProperty->getName())
@@ -51,6 +49,6 @@ readonly class DtoParser implements DataTypeParserInterface
     {
         return
             $reflectionProperty->getType() instanceof \ReflectionNamedType
-            && is_subclass_of($reflectionProperty->getType()->getName(), BaseDto::class);
+            && !$reflectionProperty->getType()->isBuiltin();
     }
 }

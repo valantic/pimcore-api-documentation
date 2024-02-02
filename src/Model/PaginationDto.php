@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Model;
 
-class PaginationDto extends BaseDto
+class PaginationDto
 {
     public function __construct(
         public int $page,
