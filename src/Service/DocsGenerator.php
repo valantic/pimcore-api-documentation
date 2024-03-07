@@ -93,7 +93,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
         $controllerReflection = new \ReflectionClass($controllerClass);
         $methods = $controllerReflection->getMethods();
 
-        return array_filter($methods, function($method) use ($controllerClass) {
+        return array_filter($methods, static function($method) use ($controllerClass): bool {
             $methodClass = $method->getDeclaringClass()->getName();
 
             return $method->getName() !== '__construct' && $methodClass === $controllerClass;

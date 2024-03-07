@@ -37,7 +37,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             ->setResponsesDoc($responseDoc)
             ->setRouteDoc($routeDoc);
 
-        if ($requestDoc !== null) {
+        if ($requestDoc instanceof RequestDoc) {
             $methodDoc->setRequestDoc($requestDoc);
         }
 
@@ -100,7 +100,6 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
     private function parseRequest(\ReflectionMethod $method): ?RequestDoc
     {
         $parsedParameters = [];
-        $schemas = [];
 
         $requestClassType = null;
 

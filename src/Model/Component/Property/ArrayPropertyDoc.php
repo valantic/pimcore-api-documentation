@@ -45,7 +45,7 @@ class ArrayPropertyDoc extends AbstractPropertyDoc implements ComponentSchemaPro
             $data['type'] = $this->getType();
         }
 
-        if ($this->getNullable() === true) {
+        if ($this->getNullable()) {
             $data['nullable'] = true;
         }
 

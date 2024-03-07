@@ -85,7 +85,7 @@ class MethodDoc implements \JsonSerializable
             'responses' => $formattedResponses,
         ];
 
-        if ($this->getRequestDoc() !== null && count($this->getRequestDoc()->getRequestBody()) !== 0) {
+        if ($this->getRequestDoc() instanceof RequestDoc && count($this->getRequestDoc()->getRequestBody()) !== 0) {
             $data['requestBody'] = $this->getRequestDoc()->getRequestBody();
         }
 

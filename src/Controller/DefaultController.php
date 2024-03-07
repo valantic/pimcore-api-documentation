@@ -11,9 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends FrontendController
 {
-    /**
-     * @Route("/valantic_pimcore_api_documentation")
-     */
+    #[Route(path: '/valantic_pimcore_api_documentation')]
     public function indexAction(Request $request): Response
     {
         return new Response('Hello world from valantic_pimcore_api_documentation');

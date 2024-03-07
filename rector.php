@@ -2,15 +2,41 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\If_\ShortenElseIfRector;
+use Rector\CodingStyle\Rector\FuncCall\CountArrayToEmptyArrayComparisonRector;
+use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
-use Rector\Set\ValueObject\LevelSetList;
+use Rector\Strict\Rector\Ternary\DisallowedShortTernaryRuleFixerRector;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([
+return RectorConfig::configure()
+    ->withPreparedSets(
+        deadCode: true,
+        codeQuality: true,
+        codingStyle: true,
+        typeDeclarations: true,
+        privatization: true,
+        instanceOf: true,
+        earlyReturn: true,
+        strictBooleans: true,
+    )
+    ->withAttributesSets(
+        symfony: true,
+        doctrine: true,
+        mongoDb: true,
+        gedmo: true,
+        phpunit: true,
+        fosRest: true,
+        jms: true,
+        sensiolabs: true,
+    )
+    ->withPhpSets()
+    ->withPaths([
         __DIR__ . '/src',
+    ])
+    ->withRootFiles()
+    ->withSkip([
+        CountArrayToEmptyArrayComparisonRector::class,
+        ShortenElseIfRector::class,
+        NewlineAfterStatementRector::class,
+        DisallowedShortTernaryRuleFixerRector::class,
     ]);
-
-    $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_82,
-    ]);
-};

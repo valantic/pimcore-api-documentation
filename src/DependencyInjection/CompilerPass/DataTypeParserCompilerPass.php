@@ -18,7 +18,7 @@ class DataTypeParserCompilerPass implements CompilerPassInterface
 
         $dataTypeParsersServices = [];
 
-        foreach ($dataTypeParsers as $dataTypeParser => $config) {
+        foreach (array_keys($dataTypeParsers) as $dataTypeParser) {
             $dataTypeParsersServices[$dataTypeParser] = new Reference($dataTypeParser);
         }
 
