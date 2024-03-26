@@ -16,6 +16,9 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    Valantic\PimcoreApiDocumentationBundle\Service\:
+        resource: '../../Service'
+
     # add more services, or override services that need manual wiring
     #    Valantic\PimcoreApiDocumentationBundle\ExampleClass:
     #        arguments:

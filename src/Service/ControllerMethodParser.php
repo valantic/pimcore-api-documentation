@@ -10,8 +10,7 @@ use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodPars
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequest;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest;
-use Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponse;
-use Valantic\PimcoreApiDocumentationBundle\Model\BaseDto;
+use Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponseInterface;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\MethodDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\ParameterDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\RequestDoc;
@@ -23,6 +22,9 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
     public function __construct(
         private SchemaGeneratorInterface $schemaGenerator,
         private RouterInterface $router,
+        private DtoDecorator $dtoDecorator,
+        private RequestDecorator $requestDecorator,
+        private ResponseDecorator $responseDecorator,
     ) {}
 
     public function parseMethod(\ReflectionMethod $method): MethodDoc
@@ -130,7 +132,9 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                 'content' => [
                     'application/json' => [
                         'schema' => [
-                            '$ref' => $this->schemaGenerator->formatComponentSchemaPath($requestClass::docsDescription()),
+                            '$ref' => $this->schemaGenerator->formatComponentSchemaPath(
+                                $this->requestDecorator->getDocsDescription($requestClass)
+                            ),
                         ],
                     ],
                 ],
@@ -186,9 +190,10 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                 continue;
             }
 
+            /** @var class-string $responseClassName */
             $responseClassName = $returnType->getName();
 
-            if (!is_subclass_of($responseClassName, ApiResponse::class)) {
+            if (!is_a($responseClassName, ApiResponseInterface::class, true)) {
                 continue;
             }
 
@@ -198,10 +203,10 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
             $responseDoc
                 ->setStatus($responseClassName::status())
-                ->setDescription($responseClassName::docsDescription());
+                ->setDescription($this->responseDecorator->getDocsDescription($responseClassName));
 
-            if ($dtoClass !== false && is_subclass_of($dtoClass, BaseDto::class)) {
-                $schemaName = $dtoClass::docsSchemaName();
+            if ($dtoClass !== false) {
+                $schemaName = $this->dtoDecorator->getDocsDescription($dtoClass);
 
                 $responseDoc->setComponentSchemas($this->schemaGenerator->generateForDto($dtoClass));
                 $responseDoc->setContent([

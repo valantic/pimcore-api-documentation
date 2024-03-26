@@ -25,6 +25,10 @@ class Configuration implements ConfigurationInterface
             ->cannotBeEmpty()
             ->defaultValue(sprintf('%s/config/api-docs/docs.yaml', PIMCORE_PROJECT_ROOT))
             ->end()
+            ->scalarNode('docs_route')
+            ->cannotBeEmpty()
+            ->defaultValue('/documentation-api')
+            ->end()
             ->end();
 
         return $treeBuilder;

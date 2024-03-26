@@ -27,4 +27,11 @@ class Str
     {
         return mb_strtolower($string, 'UTF-8');
     }
+
+    public static function class_basename(string|object $class): string
+    {
+        $class = is_object($class) ? $class::class : $class;
+
+        return basename(str_replace('\\', '/', $class));
+    }
 }

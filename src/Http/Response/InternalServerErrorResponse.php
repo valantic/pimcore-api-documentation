@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Valantic\PimcoreApiDocumentationBundle\Http\Response;
 
 use Symfony\Component\HttpFoundation\Response;
-use Valantic\PimcoreApiDocumentationBundle\Model\ErrorResponseDto;
+use Valantic\PimcoreApiDocumentationBundle\Http\Dto\ErrorResponseDto;
 
-class InternalServerErrorResponse extends ApiResponse
+class InternalServerErrorResponse extends AbstractApiResponse
 {
     public function __construct(
         mixed $data = null,

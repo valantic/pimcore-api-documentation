@@ -25,5 +25,6 @@ class ValanticPimcoreApiDocumentationExtension extends Extension
         $loader->load('services.yaml');
 
         $container->setParameter('valantic.pimcore_api_doc.base_docs_path', $config['base_docs_path'] ?? '');
+        $container->setParameter('valantic.pimcore_api_doc.docs_route', $config['docs_route'] ?? '');
     }
 }
