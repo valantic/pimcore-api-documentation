@@ -96,7 +96,9 @@ readonly class DocsGenerator implements DocsGeneratorInterface
         return array_filter($methods, static function($method) use ($controllerClass): bool {
             $methodClass = $method->getDeclaringClass()->getName();
 
-            return $method->getName() !== '__construct' && $methodClass === $controllerClass;
+            return $method->getName() !== '__construct'
+                && $methodClass === $controllerClass
+                && $method->isPublic();
         });
     }
 
