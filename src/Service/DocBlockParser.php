@@ -14,6 +14,7 @@ use PHPStan\PhpDocParser\Parser\PhpDocParser;
 use PHPStan\PhpDocParser\Parser\TokenIterator;
 use PHPStan\PhpDocParser\Parser\TypeParser;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocBlockParserInterface;
+use Valantic\PimcoreApiDocumentationBundle\Enum\TypeEnum;
 
 class DocBlockParser implements DocBlockParserInterface
 {
@@ -69,6 +70,10 @@ class DocBlockParser implements DocBlockParserInterface
 
         if (class_exists($classTypeHint)) {
             return [$classTypeHint];
+        }
+
+        if (TypeEnum::tryFrom($typeHint)) {
+            return [TypeEnum::tryFrom($typeHint)->swaggerEnum()];
         }
 
         return [];
