@@ -271,6 +271,6 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             }
         }
 
-        throw new \Exception(sprintf('Property of type %s not supported. Add service that implements %s', DataTypeParserInterface::class, $reflectionProperty->getType()));
+        throw new \Exception(sprintf('Property of type %s not supported. Add service that implements %s.', $reflectionProperty->getType(), DataTypeParserInterface::class));
     }
 }
