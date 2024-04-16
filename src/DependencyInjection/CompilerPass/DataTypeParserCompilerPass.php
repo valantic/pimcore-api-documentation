@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ComponentPropertyDocGeneratorInterface;
+use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 
 class DataTypeParserCompilerPass implements CompilerPassInterface
 {
@@ -24,6 +25,12 @@ class DataTypeParserCompilerPass implements CompilerPassInterface
 
         $docsGeneratorService = $container->findDefinition(ComponentPropertyDocGeneratorInterface::class);
         $docsGeneratorService->setArgument(
+            '$dataTypeParsers',
+            ServiceLocatorTagPass::register($container, $dataTypeParsersServices),
+        );
+
+        $controllerMethodParser = $container->findDefinition(ControllerMethodParserInterface::class);
+        $controllerMethodParser->setArgument(
             '$dataTypeParsers',
             ServiceLocatorTagPass::register($container, $dataTypeParsersServices),
         );
