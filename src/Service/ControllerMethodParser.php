@@ -271,6 +271,10 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             }
         }
 
-        throw new \Exception(sprintf('Property of type %s not supported. Add service that implements \Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface', $reflectionProperty->getType()));
+        throw new \Exception(sprintf(
+            'Property of type %s not supported. Add service that implements %s',
+            DataTypeParserInterface::class,
+            $reflectionProperty->getType(),
+        ));
     }
 }
