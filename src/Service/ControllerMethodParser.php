@@ -12,8 +12,8 @@ use Symfony\Component\Routing\RouterInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
-use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequest;
-use Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest;
+use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequestInterface;
+use Valantic\PimcoreApiDocumentationBundle\Http\Request\Contracts\HasJsonPayload;
 use Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponseInterface;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractPropertyDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\ArrayPropertyDoc;
@@ -141,7 +141,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         /** @var class-string $requestClass */
         $requestClass = $requestClassType->getName();
 
-        if (!is_subclass_of($requestClass, ApiRequest::class)) {
+        if (!$requestClass instanceof ApiRequestInterface) {
             return null;
         }
 
@@ -179,21 +179,19 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                 continue;
             }
 
-            if ($attribute->getName() === MapRequestPayload::class) {
-                if (is_subclass_of($requestClass, JsonRequest::class)) {
-                    $requestDoc->setComponentSchemaDoc($this->schemaGenerator->generateForRequest($requestClass));
-                    $requestDoc->setRequestBody([
-                        'content' => [
-                            'application/json' => [
-                                'schema' => [
-                                    '$ref' => $this->schemaGenerator->formatComponentSchemaPath(
-                                        $this->requestDecorator->getDocsDescription($requestClass)
-                                    ),
-                                ],
+            if (($attribute->getName() === MapRequestPayload::class) && $requestClass instanceof HasJsonPayload) {
+                $requestDoc->setComponentSchemaDoc($this->schemaGenerator->generateForRequest($requestClass));
+                $requestDoc->setRequestBody([
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => $this->schemaGenerator->formatComponentSchemaPath(
+                                    $this->requestDecorator->getDocsDescription($requestClass)
+                                ),
                             ],
                         ],
-                    ]);
-                }
+                    ],
+                ]);
             }
         }
 

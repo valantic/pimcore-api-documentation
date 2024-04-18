@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Valantic\PimcoreApiDocumentationBundle\Controller;
+namespace Valantic\PimcoreApiDocumentationBundle\Http\Controller;
 
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 

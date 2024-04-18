@@ -21,7 +21,7 @@ Bundle is used for generating API documentation based on API controllers.
 ## Usage
 
 ```php
-class ProductController implements \Valantic\PimcoreApiDocumentationBundle\Controller\ApiControllerInterface
+class ProductController implements \Valantic\PimcoreApiDocumentationBundle\Http\Controller\ApiControllerInterface
 {
     use \Valantic\PimcoreApiDocumentationBundle\Controller\ApiControllerTrait;
 
@@ -40,7 +40,7 @@ class ProductController implements \Valantic\PimcoreApiDocumentationBundle\Contr
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ProductCreateRequest extends \Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest
+class ProductCreateRequest implements \Valantic\PimcoreApiDocumentationBundle\Http\Request\Contracts\HasJsonPayload
 {
     #[Assert\NotBlank]
     public ?string $name = null;

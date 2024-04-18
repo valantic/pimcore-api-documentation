@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Contract\Service;
 
-use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequest;
+use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequestInterface;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\ComponentSchemaDoc;
 
 interface SchemaGeneratorInterface
@@ -17,7 +17,7 @@ interface SchemaGeneratorInterface
     public function generateForDto(string $dtoClass): array;
 
     /**
-     * @param class-string<ApiRequest> $requestClass
+     * @param class-string<ApiRequestInterface> $requestClass
      */
     public function generateForRequest(string $requestClass): ComponentSchemaDoc;
 
