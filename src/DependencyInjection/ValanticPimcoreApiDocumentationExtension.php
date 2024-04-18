@@ -8,6 +8,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Valantic\PimcoreApiDocumentationBundle\Http\Controller\ApiControllerInterface;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -16,8 +17,12 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class ValanticPimcoreApiDocumentationExtension extends Extension
 {
+    public const TAG_CONTROLLERS = 'valantic.pimcore_api_doc.controller';
+
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $container->registerForAutoconfiguration(ApiControllerInterface::class)->addTag(self::TAG_CONTROLLERS);
+
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 

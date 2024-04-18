@@ -141,10 +141,9 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         /** @var class-string $requestClass */
         $requestClass = $requestClassType->getName();
 
-        if (!$requestClass instanceof ApiRequestInterface) {
+        if (!is_subclass_of($requestClass, ApiRequestInterface::class)) {
             return null;
         }
-
         $requestDoc = new RequestDoc();
 
         foreach ($requestParameter->getAttributes() as $attribute) {
@@ -179,7 +178,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                 continue;
             }
 
-            if (($attribute->getName() === MapRequestPayload::class) && $requestClass instanceof HasJsonPayload) {
+            if (($attribute->getName() === MapRequestPayload::class) && is_subclass_of($requestClass, HasJsonPayload::class)) {
                 $requestDoc->setComponentSchemaDoc($this->schemaGenerator->generateForRequest($requestClass));
                 $requestDoc->setRequestBody([
                     'content' => [

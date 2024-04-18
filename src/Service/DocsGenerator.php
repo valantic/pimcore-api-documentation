@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
 use League\Csv\Exception;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Yaml\Yaml;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocsGeneratorInterface;
+use Valantic\PimcoreApiDocumentationBundle\DependencyInjection\ValanticPimcoreApiDocumentationExtension;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\ControllerDoc;
 
 readonly class DocsGenerator implements DocsGeneratorInterface
@@ -17,7 +19,8 @@ readonly class DocsGenerator implements DocsGeneratorInterface
      * @param array<class-string> $controllers
      */
     public function __construct(
-        private array $controllers,
+        #[TaggedIterator(ValanticPimcoreApiDocumentationExtension::TAG_CONTROLLERS)]
+        private iterable $controllers,
         private ControllerMethodParserInterface $controllerMethodParser,
         private ParameterBagInterface $parameterBag,
     ) {}
