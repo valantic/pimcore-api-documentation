@@ -4,27 +4,40 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
+use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
+use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequest;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest;
 use Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponseInterface;
+use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractPropertyDoc;
+use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\ArrayPropertyDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\MethodDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\ParameterDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\RequestDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\ResponseDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\RouteDoc;
 
+/**
+ * @template T of AbstractPropertyDoc
+ */
 readonly class ControllerMethodParser implements ControllerMethodParserInterface
 {
+    /**
+     * @param ServiceLocator<DataTypeParserInterface<T>> $dataTypeParsers
+     */
     public function __construct(
         private SchemaGeneratorInterface $schemaGenerator,
         private RouterInterface $router,
         private DtoDecorator $dtoDecorator,
         private RequestDecorator $requestDecorator,
         private ResponseDecorator $responseDecorator,
+        private ServiceLocator $dataTypeParsers,
     ) {}
 
     public function parseMethod(\ReflectionMethod $method): MethodDoc
@@ -102,18 +115,26 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
     private function parseRequest(\ReflectionMethod $method): ?RequestDoc
     {
         $parsedParameters = [];
-
-        $requestClassType = null;
+        $requestParameter = null;
 
         foreach ($method->getParameters() as $parameter) {
             if ($parameter->getName() === 'request') {
-                $requestClassType = $parameter->getType();
+                $requestParameter = $parameter;
 
                 break;
             }
         }
 
-        if (!$requestClassType instanceof \ReflectionNamedType) {
+        if ($requestParameter === null) {
+            return null;
+        }
+
+        $requestClassType = $requestParameter->getType();
+
+        if (
+            !$requestClassType instanceof \ReflectionNamedType
+            || empty($requestParameter->getAttributes())
+        ) {
             return null;
         }
 
@@ -126,40 +147,57 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
         $requestDoc = new RequestDoc();
 
-        if (is_subclass_of($requestClass, JsonRequest::class)) {
-            $requestDoc->setComponentSchemaDoc($this->schemaGenerator->generateForRequest($requestClass));
-            $requestDoc->setRequestBody([
-                'content' => [
-                    'application/json' => [
-                        'schema' => [
-                            '$ref' => $this->schemaGenerator->formatComponentSchemaPath(
-                                $this->requestDecorator->getDocsDescription($requestClass)
-                            ),
-                        ],
-                    ],
-                ],
-            ]);
-        } else {
-            $requestReflection = new \ReflectionClass($requestClass);
+        foreach ($requestParameter->getAttributes() as $attribute) {
+            if ($attribute->getName() === MapQueryString::class) {
+                $requestReflection = new \ReflectionClass($requestClass);
 
-            $requestParameters = $requestReflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+                $requestProperties = $requestReflection->getProperties(\ReflectionProperty::IS_PUBLIC);
 
-            foreach ($requestParameters as $requestParameter) {
-                $parameterDoc = new ParameterDoc();
+                foreach ($requestProperties as $property) {
+                    $parameterDoc = new ParameterDoc();
 
-                $parameterDoc
-                    ->setName($requestParameter->getName())
-                    ->setIn(ParameterDoc::IN_QUERY)
-                    ->setRequired(false)
-                    ->setSchema([
-                        'type' => 'string',
-                    ]);
+                    $propertyDoc = $this->getDataTypeParser($property)->parse($property);
 
-                $parsedParameters[] = $parameterDoc;
+                    $schema = [
+                        'type' => $propertyDoc->getType(),
+                        'nullable' => $propertyDoc->getNullable(),
+                    ];
+
+                    if ($propertyDoc instanceof ArrayPropertyDoc) {
+                        $schema['items'] = $propertyDoc->getItems();
+                    }
+
+                    $parameterDoc
+                        ->setName($property->getName())
+                        ->setIn(ParameterDoc::IN_QUERY)
+                        ->setRequired(false)
+                        ->setSchema($schema);
+
+                    $parsedParameters[] = $parameterDoc;
+                }
+
+                continue;
             }
 
-            $requestDoc->setParameters($parsedParameters);
+            if ($attribute->getName() === MapRequestPayload::class) {
+                if (is_subclass_of($requestClass, JsonRequest::class)) {
+                    $requestDoc->setComponentSchemaDoc($this->schemaGenerator->generateForRequest($requestClass));
+                    $requestDoc->setRequestBody([
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => $this->schemaGenerator->formatComponentSchemaPath(
+                                        $this->requestDecorator->getDocsDescription($requestClass)
+                                    ),
+                                ],
+                            ],
+                        ],
+                    ]);
+                }
+            }
         }
+
+        $requestDoc->setParameters($parsedParameters);
 
         return $requestDoc;
     }
@@ -222,5 +260,22 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         }
 
         return $methodResponses;
+    }
+
+    /**
+     * @return DataTypeParserInterface<T>
+     */
+    private function getDataTypeParser(\ReflectionProperty $reflectionProperty): DataTypeParserInterface
+    {
+        foreach (array_keys($this->dataTypeParsers->getProvidedServices()) as $key) {
+            /** @var DataTypeParserInterface<T> $dataTypeParser */
+            $dataTypeParser = $this->dataTypeParsers->get($key);
+
+            if ($dataTypeParser->supports($reflectionProperty)) {
+                return $dataTypeParser;
+            }
+        }
+
+        throw new \Exception(sprintf('Property of type %s not supported. Add service that implements %s.', $reflectionProperty->getType(), DataTypeParserInterface::class));
     }
 }
