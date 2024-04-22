@@ -7,7 +7,8 @@ namespace Valantic\PimcoreApiDocumentationBundle\Service;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Annotation\Route as RouteAnnotation;
+use Symfony\Component\Routing\Attribute\Route as RouteAttribute;
 use Symfony\Component\Routing\RouterInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface;
@@ -64,7 +65,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         $attributes = $method->getAttributes();
 
         foreach ($attributes as $attribute) {
-            if ($attribute->getName() === Route::class) {
+            if ($attribute->getName() === RouteAnnotation::class || $attribute->getName() === RouteAttribute::class) {
                 $routeAttributeArguments = $attribute->getArguments();
 
                 break;
