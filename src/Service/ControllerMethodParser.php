@@ -72,7 +72,11 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         }
 
         if (!isset($routeAttributeArguments) || !isset($routeAttributeArguments['path']) || !isset($routeAttributeArguments['methods'])) {
-            throw new \Exception('Route not defined.');
+            throw new \Exception(sprintf('Route in %s::%s not defined.', $method->getDeclaringClass()->getName(), $method->getName()));
+        }
+
+        if (!isset($routeAttributeArguments['name'])) {
+            throw new \Exception(sprintf('Route in %s::%s does not have a "name" property.', $method->getDeclaringClass()->getName(), $method->getName()));
         }
 
         $route = $this->router->getRouteCollection()->get($routeAttributeArguments['name']);
@@ -104,9 +108,18 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
         $routeDoc = new RouteDoc();
 
+        $methods = $routeAttributeArguments['methods'];
+
+        if (is_array($methods)) {
+            if (count($methods) > 1) {
+                throw new \Exception(sprintf('Route %s has multiple methods. This is not yet supported.', $routeAttributeArguments['name']));
+            }
+            $methods = $methods[0];
+        }
+
         $routeDoc
             ->setPath($path)
-            ->setMethod(strtolower((string) $routeAttributeArguments['methods']))
+            ->setMethod(strtolower((string) $methods))
             ->setParameters($parsedParameters);
 
         return $routeDoc;

@@ -45,6 +45,6 @@ readonly class ComponentPropertyDocGenerator implements ComponentPropertyDocGene
             }
         }
 
-        throw new \Exception(sprintf('Property of type %s not supported.', $reflectionProperty->getType()));
+        throw new \Exception(sprintf('Property of type %s in %s::$%s not supported.', $reflectionProperty->getType(), $reflectionProperty->getDeclaringClass()->getName(), $reflectionProperty->getName()));
     }
 }
