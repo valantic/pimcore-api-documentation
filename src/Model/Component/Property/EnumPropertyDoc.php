@@ -6,10 +6,13 @@ namespace Valantic\PimcoreApiDocumentationBundle\Model\Component\Property;
 
 class EnumPropertyDoc extends AbstractPropertyDoc
 {
+    /**
+     * @var array<int, string>
+     */
     protected array $enumOptions = [];
 
     /**
-     * @return string[]
+     * @return array<int, string>
      */
     public function getEnumOptions(): array
     {
@@ -17,7 +20,7 @@ class EnumPropertyDoc extends AbstractPropertyDoc
     }
 
     /**
-     * @param string[] $enumOptions
+     * @param array<int, string> $enumOptions
      */
     public function setEnumOptions(array $enumOptions): self
     {

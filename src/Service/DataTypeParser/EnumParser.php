@@ -8,16 +8,19 @@ use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterf
 use Valantic\PimcoreApiDocumentationBundle\Enum\DataTypeEnum;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractPropertyDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\EnumPropertyDoc;
-use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\SimplePropertyDoc;
 
 /**
- * @implements DataTypeParserInterface<SimplePropertyDoc>
+ * @implements DataTypeParserInterface<EnumPropertyDoc>
  */
 class EnumParser implements DataTypeParserInterface
 {
     public function parse(\ReflectionProperty $reflectionProperty): AbstractPropertyDoc
     {
         $propertyDoc = new EnumPropertyDoc();
+
+        if (!$reflectionProperty->getType() instanceof \ReflectionNamedType) {
+            return $propertyDoc;
+        }
 
         $propertyTypeName = $reflectionProperty->getType()->getName();
 
@@ -29,9 +32,9 @@ class EnumParser implements DataTypeParserInterface
 
         foreach ($propertyTypeName::cases() as $enumCase) {
             if ($enumCase instanceof \BackedEnum) {
-                $enumOptions[] = $enumCase->value;
+                $enumOptions[] = (string) $enumCase->value;
             } else {
-                $enumOptions[] = $enumCase->name;
+                $enumOptions[] = (string) $enumCase->name;
             }
         }
 
@@ -39,7 +42,7 @@ class EnumParser implements DataTypeParserInterface
             ->setName($reflectionProperty->getName())
             ->setType(DataTypeEnum::STRING->value)
             ->setEnumOptions($enumOptions)
-            ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true);
+            ->setNullable($reflectionProperty->getType()->allowsNull() ?? true);
 
         return $propertyDoc;
     }
