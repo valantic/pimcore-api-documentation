@@ -59,4 +59,16 @@ class ArrayPropertyDoc extends AbstractPropertyDoc implements ComponentSchemaPro
 
         return $data;
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function getSchema(): array
+    {
+        return [
+            'type' => $this->getType(),
+            'nullable' => $this->getNullable(),
+            'items' => $this->getItems(),
+        ];
+    }
 }
