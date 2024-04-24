@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
 use League\Csv\Exception;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\Routing\Annotation\Route as RouteAnnotation;
+use Symfony\Component\Routing\Attribute\Route as RouteAttribute;
 use Symfony\Component\Yaml\Yaml;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocsGeneratorInterface;
+use Valantic\PimcoreApiDocumentationBundle\DependencyInjection\ValanticPimcoreApiDocumentationExtension;
+use Valantic\PimcoreApiDocumentationBundle\Exception\UnableToGenerateDocumentation;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\ControllerDoc;
 
 readonly class DocsGenerator implements DocsGeneratorInterface
@@ -17,9 +22,11 @@ readonly class DocsGenerator implements DocsGeneratorInterface
      * @param array<class-string> $controllers
      */
     public function __construct(
-        private array $controllers,
+        #[TaggedIterator(ValanticPimcoreApiDocumentationExtension::TAG_CONTROLLERS)]
+        private iterable $controllers,
         private ControllerMethodParserInterface $controllerMethodParser,
-        private ParameterBagInterface $parameterBag,
+        #[Autowire('%valantic.pimcore_api_doc.base_docs_path%')]
+        private string $baseDocsPath,
     ) {}
 
     public function generate(string $docsPath): void
@@ -48,13 +55,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
             }
         }
 
-        $baseDocsPath = $this->parameterBag->get('valantic.pimcore_api_doc.base_docs_path');
-
-        if (!is_string($baseDocsPath)) {
-            throw new \Exception('Missing base docs path.');
-        }
-
-        $apiDocs = Yaml::parse(file_get_contents($baseDocsPath) ?: '');
+        $apiDocs = Yaml::parse(file_get_contents($this->baseDocsPath) ?: '');
 
         $apiDocs['paths'] = array_merge($apiDocs['paths'] ?? [], $paths);
         $apiDocs['components']['schemas'] = array_merge($schemas, $apiDocs['components']['schemas'] ?? []);
@@ -98,7 +99,12 @@ readonly class DocsGenerator implements DocsGeneratorInterface
 
             return $method->getName() !== '__construct'
                 && $methodClass === $controllerClass
-                && $method->isPublic();
+                && $method->isPublic()
+                && array_reduce(
+                    $method->getAttributes(),
+                    fn (bool $carry, \ReflectionAttribute $attribute): bool => $carry || $attribute->getName() === RouteAnnotation::class || $attribute->getName() === RouteAttribute::class,
+                    false
+                );
         });
     }
 
@@ -120,6 +126,6 @@ readonly class DocsGenerator implements DocsGeneratorInterface
             return;
         }
 
-        throw new Exception('Failed to create file.');
+        throw new UnableToGenerateDocumentation('Failed to create file.');
     }
 }

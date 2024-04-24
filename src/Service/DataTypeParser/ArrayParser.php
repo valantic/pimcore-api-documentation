@@ -8,9 +8,9 @@ use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterf
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocBlockParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Enum\DataTypeEnum;
-use Valantic\PimcoreApiDocumentationBundle\Model\BaseDto;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractPropertyDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\ArrayPropertyDoc;
+use Valantic\PimcoreApiDocumentationBundle\Service\DtoDecorator;
 
 /**
  * @implements DataTypeParserInterface<ArrayPropertyDoc>
@@ -20,6 +20,7 @@ readonly class ArrayParser implements DataTypeParserInterface
     public function __construct(
         private DocBlockParserInterface $docBlockParser,
         private SchemaGeneratorInterface $schemaGenerator,
+        private DtoDecorator $dtoDecorator,
     ) {}
 
     public function parse(\ReflectionProperty $reflectionProperty): AbstractPropertyDoc
@@ -29,8 +30,9 @@ readonly class ArrayParser implements DataTypeParserInterface
         $arrayItems = [];
 
         foreach ($typeHints as $typeHint) {
-            if (is_subclass_of($typeHint, BaseDto::class)) {
-                $arrayDtoSchemaName = $typeHint::docsSchemaName();
+            if (str_contains($typeHint, '\\')) {
+                /** @var class-string $typeHint */
+                $arrayDtoSchemaName = $this->dtoDecorator->getDocsDescription($typeHint);
                 $schemas = $this->schemaGenerator->generateForDto($typeHint);
 
                 $arrayItems[] = [

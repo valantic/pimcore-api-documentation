@@ -21,8 +21,10 @@ Bundle is used for generating API documentation based on API controllers.
 ## Usage
 
 ```php
-class ProductController extends \Valantic\PimcoreApiDocumentationBundle\Controller\ApiController
+class ProductController implements \Valantic\PimcoreApiDocumentationBundle\Http\Controller\ApiControllerInterface
 {
+    use \Valantic\PimcoreApiDocumentationBundle\Controller\ApiControllerTrait;
+
     #[Route(path: '/product', name: 'rest_api_product_create', methods: Request::METHOD_POST)]
     public function create(ProductCreateRequest $request): ProductCreateResponse|\Valantic\PimcoreApiDocumentationBundle\Http\Response\BadRequestResponse
     {
@@ -38,7 +40,7 @@ class ProductController extends \Valantic\PimcoreApiDocumentationBundle\Controll
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ProductCreateRequest extends \Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest
+class ProductCreateRequest implements \Valantic\PimcoreApiDocumentationBundle\Http\Request\Contracts\HasJsonPayload
 {
     #[Assert\NotBlank]
     public ?string $name = null;
@@ -47,7 +49,7 @@ class ProductCreateRequest extends \Valantic\PimcoreApiDocumentationBundle\Http\
     public ?string $description = null;
 }
 
-class ProductCreateResponse extends \Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponse
+class ProductCreateResponse implements \Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponseInterface
 {
     public static function status(): int
     {
@@ -60,7 +62,7 @@ class ProductCreateResponse extends \Valantic\PimcoreApiDocumentationBundle\Http
     }
 }
 
-class ProductCreateDto extends \Valantic\PimcoreApiDocumentationBundle\Model\BaseDto
+class ProductCreateDto
 {
     public function __construct(
         public ?int $id,

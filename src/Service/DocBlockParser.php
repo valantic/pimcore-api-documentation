@@ -60,7 +60,11 @@ class DocBlockParser implements DocBlockParserInterface
     {
         $useStatements = $this->phpParser->parseUseStatements($reflectionClass);
 
-        $typeHint = $docBlock->value->type->type->name;
+        $typeHint = $docBlock->value->type->type->name ?? null;
+
+        if ($typeHint === null) {
+            return [];
+        }
 
         if (array_key_exists(strtolower((string) $typeHint), $useStatements)) {
             return [$useStatements[strtolower((string) $typeHint)]];

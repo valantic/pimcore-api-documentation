@@ -7,6 +7,7 @@ namespace Valantic\PimcoreApiDocumentationBundle\Service;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ComponentPropertyDocGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface;
+use Valantic\PimcoreApiDocumentationBundle\Exception\UnsupportedPropertyTypeException;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractPropertyDoc;
 
 /**
@@ -45,6 +46,6 @@ readonly class ComponentPropertyDocGenerator implements ComponentPropertyDocGene
             }
         }
 
-        throw new \Exception(sprintf('Property of type %s not supported.', $reflectionProperty->getType()));
+        throw new UnsupportedPropertyTypeException(sprintf('Property of type %s in %s::$%s not supported.', $reflectionProperty->getType(), $reflectionProperty->getDeclaringClass()->getName(), $reflectionProperty->getName()));
     }
 }
