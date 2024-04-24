@@ -13,6 +13,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
+use Valantic\PimcoreApiDocumentationBundle\Exception\IncompleteRouteException;
+use Valantic\PimcoreApiDocumentationBundle\Exception\UnsupportedPropertyTypeException;
+use Valantic\PimcoreApiDocumentationBundle\Exception\UnsupportedRouteException;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\ApiRequestInterface;
 use Valantic\PimcoreApiDocumentationBundle\Http\Request\Contracts\HasJsonPayload;
 use Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponseInterface;
@@ -72,18 +75,18 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             }
         }
 
-        if (!isset($routeAttributeArguments) || !isset($routeAttributeArguments['path']) || !isset($routeAttributeArguments['methods'])) {
-            throw new \Exception(sprintf('Route in %s::%s not defined.', $method->getDeclaringClass()->getName(), $method->getName()));
+        if (!isset($routeAttributeArguments['path'], $routeAttributeArguments['methods'])) {
+            throw new IncompleteRouteException(sprintf('Route in %s::%s not defined or missing attributes "path" and/or "methods".', $method->getDeclaringClass()->getName(), $method->getName()));
         }
 
         if (!isset($routeAttributeArguments['name'])) {
-            throw new \Exception(sprintf('Route in %s::%s does not have a "name" property.', $method->getDeclaringClass()->getName(), $method->getName()));
+            throw new IncompleteRouteException(sprintf('Route in %s::%s does not have a "name" property.', $method->getDeclaringClass()->getName(), $method->getName()));
         }
 
         $route = $this->router->getRouteCollection()->get($routeAttributeArguments['name']);
 
         if ($route === null) {
-            throw new \Exception('Route not found.');
+            throw new IncompleteRouteException(sprintf('Route %s not found.', $routeAttributeArguments['name']));
         }
 
         $path = $route->getPath();
@@ -113,7 +116,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
         if (is_array($methods)) {
             if (count($methods) > 1) {
-                throw new \Exception(sprintf('Route %s has multiple methods. This is not yet supported.', $routeAttributeArguments['name']));
+                throw new UnsupportedRouteException(sprintf('Route %s has multiple methods. This is not yet supported.', $routeAttributeArguments['name']));
             }
             $methods = $methods[0];
         }
@@ -162,6 +165,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
         foreach ($requestParameter->getAttributes() as $attribute) {
             if ($attribute->getName() === MapQueryString::class) {
+                // TODO: parse nested
                 $requestReflection = new \ReflectionClass($requestClass);
 
                 $requestProperties = $requestReflection->getProperties(\ReflectionProperty::IS_PUBLIC);
@@ -221,7 +225,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         $methodReturnType = $method->getReturnType();
 
         if ($methodReturnType === null) {
-            throw new \Exception(sprintf('Missing return type for method %s::%s', $method->getDeclaringClass()->getName(), $method->getName()));
+            throw new IncompleteRouteException(sprintf('Missing return type for method %s::%s', $method->getDeclaringClass()->getName(), $method->getName()));
         }
 
         $returnTypes = [];
@@ -287,6 +291,6 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             }
         }
 
-        throw new \Exception(sprintf('Property of type %s not supported. Add service that implements %s.', $reflectionProperty->getType(), DataTypeParserInterface::class));
+        throw new UnsupportedPropertyTypeException(sprintf('Property of type %s not supported. Add service that implements %s.', $reflectionProperty->getType(), DataTypeParserInterface::class));
     }
 }

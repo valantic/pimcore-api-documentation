@@ -6,6 +6,7 @@ namespace Valantic\PimcoreApiDocumentationBundle\Service\DataTypeParser;
 
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
+use Valantic\PimcoreApiDocumentationBundle\Exception\UnsupportedPropertyTypeException;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractPropertyDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\DtoPropertyDoc;
 use Valantic\PimcoreApiDocumentationBundle\Service\DtoDecorator;
@@ -23,7 +24,7 @@ readonly class DtoParser implements DataTypeParserInterface
     public function parse(\ReflectionProperty $reflectionProperty): AbstractPropertyDoc
     {
         if (!$reflectionProperty->getType() instanceof \ReflectionNamedType) {
-            throw new \Exception('Unsupported type.');
+            throw new UnsupportedPropertyTypeException(sprintf('Unsupported type %s.', $reflectionProperty->getName()));
         }
 
         /** @var class-string $dtoClass */
