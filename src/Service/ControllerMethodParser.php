@@ -17,7 +17,6 @@ use Valantic\PimcoreApiDocumentationBundle\Http\Request\JsonRequest;
 use Valantic\PimcoreApiDocumentationBundle\Http\Response\ApiResponse;
 use Valantic\PimcoreApiDocumentationBundle\Model\BaseDto;
 use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractPropertyDoc;
-use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\ArrayPropertyDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\MethodDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\ParameterDoc;
 use Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request\RequestDoc;
@@ -156,20 +155,11 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
                     $propertyDoc = $this->getDataTypeParser($property)->parse($property);
 
-                    $schema = [
-                        'type' => $propertyDoc->getType(),
-                        'nullable' => $propertyDoc->getNullable(),
-                    ];
-
-                    if ($propertyDoc instanceof ArrayPropertyDoc) {
-                        $schema['items'] = $propertyDoc->getItems();
-                    }
-
                     $parameterDoc
                         ->setName($property->getName())
                         ->setIn(ParameterDoc::IN_QUERY)
                         ->setRequired(false)
-                        ->setSchema($schema);
+                        ->setSchema($propertyDoc->getSchema());
 
                     $parsedParameters[] = $parameterDoc;
                 }
