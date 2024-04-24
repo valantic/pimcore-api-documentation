@@ -63,4 +63,15 @@ abstract class AbstractPropertyDoc implements \JsonSerializable
 
         return $data;
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function getSchema(): array
+    {
+        return [
+            'type' => $this->getType(),
+            'nullable' => $this->getNullable(),
+        ];
+    }
 }
