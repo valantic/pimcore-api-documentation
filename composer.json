@@ -1,6 +1,6 @@
 {
   "name": "valantic/pimcore-api-documentation",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Auto generate API documentation for routes",
   "homepage": "https://github.com/valantic/pimcore-api-documentation",
   "license": "MIT",
