@@ -50,6 +50,7 @@ readonly class DtoParser implements DataTypeParserInterface
     {
         return
             $reflectionProperty->getType() instanceof \ReflectionNamedType
-            && !$reflectionProperty->getType()->isBuiltin();
+            && !$reflectionProperty->getType()->isBuiltin()
+            && !is_subclass_of($reflectionProperty->getType()->getName(), \UnitEnum::class);
     }
 }
