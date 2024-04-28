@@ -40,6 +40,8 @@ class DocBlockParser implements DocBlockParserInterface
         $parsedDocBlock = $this->phpDocParser->parse($tokens);
 
         foreach ($parsedDocBlock->children as $docBlockItem) {
+            $docBlockParamName = $parameterName;
+
             if ($docBlockItem->value instanceof ParamTagValueNode) {
                 $docBlockParamName = ltrim($docBlockItem->value->parameterName, '$');
             }
@@ -48,17 +50,9 @@ class DocBlockParser implements DocBlockParserInterface
                 $docBlockParamName = ltrim($docBlockItem->value->variableName, '$');
             }
 
-            if (
-                (
-                    !isset($docBlockParamName)
-                    || $docBlockParamName === ''
-                )
-                && $parameterName !== null
-            ) {
-                $docBlockParamName = $parameterName;
+            if (isset($docBlockParamName) && $docBlockParamName !== '') {
+                $docBlockData[$docBlockParamName] = $docBlockItem;
             }
-
-            $docBlockData[$docBlockParamName] = $docBlockItem;
         }
 
         return $docBlockData;

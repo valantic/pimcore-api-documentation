@@ -17,6 +17,9 @@ class RequestDoc
     /** @var mixed[] */
     private array $requestBody = [];
 
+    /**
+     * @return ComponentSchemaDoc[]
+     */
     public function getComponentSchemaDocs(): array
     {
         return $this->componentSchemaDocs;
