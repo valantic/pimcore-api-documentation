@@ -8,7 +8,8 @@ use Valantic\PimcoreApiDocumentationBundle\Model\Component\ComponentSchemaDoc;
 
 class RequestDoc
 {
-    private ?ComponentSchemaDoc $componentSchemaDoc = null;
+    /** @var ComponentSchemaDoc[] */
+    private array $componentSchemaDocs = [];
 
     /** @var ParameterDoc[] */
     private array $parameters = [];
@@ -16,14 +17,16 @@ class RequestDoc
     /** @var mixed[] */
     private array $requestBody = [];
 
-    public function getComponentSchemaDoc(): ?ComponentSchemaDoc
+    public function getComponentSchemaDocs(): array
     {
-        return $this->componentSchemaDoc;
+        return $this->componentSchemaDocs;
     }
 
-    public function setComponentSchemaDoc(?ComponentSchemaDoc $componentSchemaDoc): self
+    public function addComponentSchemaDoc(?ComponentSchemaDoc $componentSchemaDoc): self
     {
-        $this->componentSchemaDoc = $componentSchemaDoc;
+        if ($componentSchemaDoc !== null) {
+            $this->componentSchemaDocs[$componentSchemaDoc->getName()] = $componentSchemaDoc;
+        }
 
         return $this;
     }

@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route as RouteAnnotation;
 use Symfony\Component\Routing\Attribute\Route as RouteAttribute;
 use Symfony\Component\Routing\RouterInterface;
+use Valantic\PimcoreApiDocumentationBundle\Contract\Model\Component\Property\ComponentSchemaPropertyInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
@@ -160,11 +161,11 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         if (!is_subclass_of($requestClass, ApiRequestInterface::class)) {
             return null;
         }
+
         $requestDoc = new RequestDoc();
 
         foreach ($requestParameter->getAttributes() as $attribute) {
             if ($attribute->getName() === MapQueryString::class) {
-                // TODO: parse nested
                 $requestReflection = new \ReflectionClass($requestClass);
 
                 $requestProperties = $requestReflection->getProperties(\ReflectionProperty::IS_PUBLIC);
@@ -173,6 +174,12 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                     $parameterDoc = new ParameterDoc();
 
                     $propertyDoc = $this->getDataTypeParser($property)->parse($property);
+
+                    if ($propertyDoc instanceof ComponentSchemaPropertyInterface) {
+                        foreach ($propertyDoc->getSchemas() as $schema) {
+                            $requestDoc->addComponentSchemaDoc($schema);
+                        }
+                    }
 
                     $parameterDoc
                         ->setName($property->getName())
@@ -187,7 +194,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
             }
 
             if (($attribute->getName() === MapRequestPayload::class) && is_subclass_of($requestClass, HasJsonPayload::class)) {
-                $requestDoc->setComponentSchemaDoc($this->schemaGenerator->generateForRequest($requestClass));
+                $requestDoc->addComponentSchemaDoc($this->schemaGenerator->generateForRequest($requestClass));
                 $requestDoc->setRequestBody([
                     'content' => [
                         'application/json' => [
