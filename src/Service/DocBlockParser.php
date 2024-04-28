@@ -50,10 +50,10 @@ class DocBlockParser implements DocBlockParserInterface
 
             if (
                 (
-                    !isset($docBlockParamName) ||
-                    $docBlockParamName === ''
-                ) &&
-                $parameterName !== null
+                    !isset($docBlockParamName)
+                    || $docBlockParamName === ''
+                )
+                && $parameterName !== null
             ) {
                 $docBlockParamName = $parameterName;
             }

@@ -44,7 +44,6 @@ readonly class ArrayParser implements DataTypeParserInterface
             }
         }
 
-
         $propertyDoc = new ArrayPropertyDoc();
 
         if (count($arrayItems) > 1) {
