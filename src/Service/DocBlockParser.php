@@ -33,23 +33,25 @@ class DocBlockParser implements DocBlockParserInterface
         $this->phpDocParser = new PhpDocParser($typeParser, $constExprParser);
     }
 
-    public function parseDocBlock(string $docBlock): array
+    public function parseDocBlock(string $docBlock, ?string $parameterName = null): array
     {
         $docBlockData = [];
         $tokens = new TokenIterator($this->lexer->tokenize($docBlock));
         $parsedDocBlock = $this->phpDocParser->parse($tokens);
 
         foreach ($parsedDocBlock->children as $docBlockItem) {
+            $docBlockParamName = $parameterName;
+
             if ($docBlockItem->value instanceof ParamTagValueNode) {
-                $parameterName = ltrim($docBlockItem->value->parameterName, '$');
+                $docBlockParamName = ltrim($docBlockItem->value->parameterName, '$');
             }
 
             if ($docBlockItem->value instanceof VarTagValueNode) {
-                $parameterName = ltrim($docBlockItem->value->variableName, '$');
+                $docBlockParamName = ltrim($docBlockItem->value->variableName, '$');
             }
 
-            if (isset($parameterName)) {
-                $docBlockData[$parameterName] = $docBlockItem;
+            if (isset($docBlockParamName) && $docBlockParamName !== '') {
+                $docBlockData[$docBlockParamName] = $docBlockItem;
             }
         }
 
