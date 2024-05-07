@@ -17,13 +17,6 @@ class ValanticPimcoreApiDocumentationBundle extends AbstractPimcoreBundle implem
     use BundleAdminClassicTrait;
     use PackageVersionTrait;
 
-    public function getJsPaths(): array
-    {
-        return [
-            '/bundles/valanticpimcoreapidocumentation/js/pimcore/startup.js',
-        ];
-    }
-
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
