@@ -8,6 +8,7 @@ abstract class AbstractPropertyDoc implements \JsonSerializable
 {
     protected ?string $name = null;
     protected ?string $type = null;
+    protected ?string $docBlock = null;
     protected bool $nullable = true;
 
     public function setName(?string $name): static
@@ -32,6 +33,18 @@ abstract class AbstractPropertyDoc implements \JsonSerializable
     public function getType(): ?string
     {
         return $this->type;
+    }
+
+    public function getDocBlock(): ?string
+    {
+        return $this->docBlock;
+    }
+
+    public function setDocBlock(string|false|null $docBlock): static
+    {
+        $this->docBlock = $docBlock === false ? null : $docBlock;
+
+        return $this;
     }
 
     public function setNullable(bool $nullable): static

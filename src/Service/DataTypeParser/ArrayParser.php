@@ -55,6 +55,7 @@ readonly class ArrayParser implements DataTypeParserInterface
 
         $propertyDoc
             ->setName($reflectionProperty->getName())
+            ->setDocBlock($reflectionProperty->getDocComment())
             ->setType(DataTypeEnum::ARRAY->value)
             ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true)
             ->setSchemas($schemas ?? []);
