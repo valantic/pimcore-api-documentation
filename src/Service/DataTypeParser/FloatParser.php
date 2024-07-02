@@ -19,6 +19,7 @@ class FloatParser implements DataTypeParserInterface
 
         $propertyDoc
             ->setName($reflectionProperty->getName())
+            ->setDocBlock($reflectionProperty->getDocComment())
             ->setType(DataTypeEnum::FLOAT->value)
             ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true);
 

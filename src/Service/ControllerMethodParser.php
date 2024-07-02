@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
+use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -12,6 +14,7 @@ use Symfony\Component\Routing\Attribute\Route as RouteAttribute;
 use Symfony\Component\Routing\RouterInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DataTypeParserInterface;
+use Valantic\PimcoreApiDocumentationBundle\Contract\Service\DocBlockParserInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\SchemaGeneratorInterface;
 use Valantic\PimcoreApiDocumentationBundle\Exception\IncompleteRouteException;
 use Valantic\PimcoreApiDocumentationBundle\Exception\UnsupportedPropertyTypeException;
@@ -41,6 +44,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         private RequestDecorator $requestDecorator,
         private ResponseDecorator $responseDecorator,
         private ServiceLocator $dataTypeParsers,
+        private DocBlockParserInterface $docBlockParser,
     ) {}
 
     public function parseMethod(\ReflectionMethod $method): MethodDoc
@@ -176,6 +180,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
                     $parameterDoc
                         ->setName($property->getName())
+                        ->setDescription($this->getDescription($propertyDoc))
                         ->setIn(ParameterDoc::IN_QUERY)
                         ->setRequired(false)
                         ->setSchema($propertyDoc->getSchema());
@@ -282,5 +287,26 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         }
 
         throw new UnsupportedPropertyTypeException(sprintf('Property of type %s not supported. Add service that implements %s.', $reflectionProperty->getType(), DataTypeParserInterface::class));
+    }
+
+    private function getDescription(AbstractPropertyDoc $propertyDoc): ?string
+    {
+        $docBlock = $propertyDoc->getDocBlock();
+
+        if ($docBlock === null) {
+            return null;
+        }
+
+        $nodes = $this->docBlockParser->parseDocBlock($docBlock);
+
+        foreach ($nodes as $node) {
+            if (!$node instanceof PhpDocTagNode || !$node->value instanceof VarTagValueNode) {
+                continue;
+            }
+
+            return $node->value->description;
+        }
+
+        return null;
     }
 }

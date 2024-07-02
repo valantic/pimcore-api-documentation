@@ -9,6 +9,7 @@ class ParameterDoc implements \JsonSerializable
     final public const IN_PATH = 'path';
     final public const IN_QUERY = 'query';
     private string $name;
+    private ?string $description = null;
     private string $in;
     private bool $required;
 
@@ -23,6 +24,18 @@ class ParameterDoc implements \JsonSerializable
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -76,6 +89,7 @@ class ParameterDoc implements \JsonSerializable
     {
         return [
             'name' => $this->getName(),
+            'description' => $this->getDescription(),
             'in' => $this->getIn(),
             'required' => $this->isRequired(),
             'schema' => $this->getSchema(),

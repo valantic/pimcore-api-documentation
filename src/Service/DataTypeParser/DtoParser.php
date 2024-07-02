@@ -38,6 +38,7 @@ readonly class DtoParser implements DataTypeParserInterface
 
         $propertyDoc
             ->setName($reflectionProperty->getName())
+            ->setDocBlock($reflectionProperty->getDocComment())
             ->setType('object')
             ->setNullable($reflectionProperty->getType()->allowsNull())
             ->setRef($ref)
