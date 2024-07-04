@@ -20,6 +20,7 @@ class BooleanParser implements DataTypeParserInterface
 
         $propertyDoc
             ->setName($reflectionProperty->getName())
+            ->setDocBlock($reflectionProperty->getDocComment())
             ->setType(DataTypeEnum::BOOLEAN->value)
             ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true);
 
