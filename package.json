@@ -4,8 +4,8 @@
     "lint": "exit 0"
   },
   "devDependencies": {
-    "@release-it/bumper": "^7.0.0",
-    "release-it": "^18.1.1"
+    "@release-it/bumper": "^7.0.5",
+    "release-it": "^19.0.2"
   },
   "version": "0.6.4"
 }
