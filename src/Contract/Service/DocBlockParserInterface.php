@@ -11,7 +11,7 @@ interface DocBlockParserInterface
     /**
      * @return array<string, PhpDocChildNode>
      */
-    public function parseDocBlock(string $docBlock): array;
+    public function parseDocBlock(string $docBlock, ?string $parameterName = null): array;
 
     /**
      * @return string[]
