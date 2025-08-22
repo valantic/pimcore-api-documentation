@@ -44,10 +44,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
             foreach ($controllerDoc->getMethodsDocs() as $methodDoc) {
                 $paths[$methodDoc->getRouteDoc()->getPath()][$methodDoc->getRouteDoc()->getMethod()] = $methodDoc;
 
-                if ($methodDoc->getRequestDoc()?->getComponentSchemaDoc() !== null) {
-                    $requestSchema = $methodDoc->getRequestDoc()->getComponentSchemaDoc();
-                    $schemas[$requestSchema->getName()] = $requestSchema;
-                }
+                $schemas = array_merge($schemas, $methodDoc->getRequestDoc()?->getComponentSchemaDocs() ?: []);
 
                 foreach ($methodDoc->getResponsesDoc() as $responseDoc) {
                     $schemas = array_merge($schemas, $responseDoc->getComponentSchemas());
