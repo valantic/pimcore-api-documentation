@@ -22,7 +22,8 @@ class BooleanParser implements DataTypeParserInterface
             ->setName($reflectionProperty->getName())
             ->setDocBlock($reflectionProperty->getDocComment())
             ->setType(DataTypeEnum::BOOLEAN->value)
-            ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true);
+            ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true)
+        ;
 
         return $propertyDoc;
     }

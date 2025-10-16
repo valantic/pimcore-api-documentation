@@ -27,7 +27,8 @@ readonly class DocsGenerator implements DocsGeneratorInterface
         private ControllerMethodParserInterface $controllerMethodParser,
         #[Autowire('%valantic.pimcore_api_doc.base_docs_path%')]
         private string $baseDocsPath,
-    ) {}
+    ) {
+    }
 
     public function generate(string $docsPath): void
     {
@@ -85,16 +86,16 @@ readonly class DocsGenerator implements DocsGeneratorInterface
     /**
      * @param class-string $controllerClass
      *
-     * @throws \ReflectionException
-     *
      * @return \ReflectionMethod[]
+     *
+     * @throws \ReflectionException
      */
     private function getValidControllerMethods(string $controllerClass): array
     {
         $controllerReflection = new \ReflectionClass($controllerClass);
         $methods = $controllerReflection->getMethods();
 
-        return array_filter($methods, static function($method) use ($controllerClass): bool {
+        return array_filter($methods, static function ($method) use ($controllerClass): bool {
             $methodClass = $method->getDeclaringClass()->getName();
 
             return $method->getName() !== '__construct'
@@ -103,7 +104,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
                 && array_reduce(
                     $method->getAttributes(),
                     fn (bool $carry, \ReflectionAttribute $attribute): bool => $carry || $attribute->getName() === RouteAnnotation::class || $attribute->getName() === RouteAttribute::class,
-                    false
+                    false,
                 );
         });
     }

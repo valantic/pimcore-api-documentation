@@ -20,7 +20,8 @@ readonly class ComponentPropertyDocGenerator implements ComponentPropertyDocGene
      */
     public function __construct(
         private ServiceLocator $dataTypeParsers,
-    ) {}
+    ) {
+    }
 
     /**
      * @return T

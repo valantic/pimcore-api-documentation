@@ -11,11 +11,6 @@ parameters:
 			path: src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Strict comparison using \\!\\=\\= between array\\{array\\<int, string\\>, array\\<int, non\\-empty\\-string\\>\\} and array\\{\\} will always evaluate to true\\.$#"
-			count: 1
-			path: src/Service/ControllerMethodParser.php
-
-		-
 			message: "#^Access to an undefined property PHPStan\\\\PhpDocParser\\\\Ast\\\\PhpDoc\\\\PhpDocChildNode\\:\\:\\$value\\.$#"
 			count: 1
 			path: src/Service/DocBlockParser.php

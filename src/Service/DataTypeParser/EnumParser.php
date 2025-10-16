@@ -31,11 +31,9 @@ class EnumParser implements DataTypeParserInterface
         $enumOptions = [];
 
         foreach ($propertyTypeName::cases() as $enumCase) {
-            if ($enumCase instanceof \BackedEnum) {
-                $enumOptions[] = (string) $enumCase->value;
-            } else {
-                $enumOptions[] = (string) $enumCase->name;
-            }
+            $enumOptions[] = $enumCase instanceof \BackedEnum
+                ? (string) $enumCase->value
+                : (string) $enumCase->name;
         }
 
         $propertyDoc
@@ -43,7 +41,8 @@ class EnumParser implements DataTypeParserInterface
             ->setDocBlock($reflectionProperty->getDocComment())
             ->setType(DataTypeEnum::STRING->value)
             ->setEnumOptions($enumOptions)
-            ->setNullable($reflectionProperty->getType()->allowsNull() ?? true);
+            ->setNullable($reflectionProperty->getType()->allowsNull() ?? true)
+        ;
 
         return $propertyDoc;
     }

@@ -33,7 +33,8 @@ class Configuration implements ConfigurationInterface
             ->cannotBeEmpty()
             ->defaultValue('%kernel.project_dir%/var/api-docs/api_documentation.json')
             ->end()
-            ->end();
+            ->end()
+        ;
 
         return $treeBuilder;
     }

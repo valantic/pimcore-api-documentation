@@ -21,7 +21,8 @@ readonly class ArrayParser implements DataTypeParserInterface
         private DocBlockParserInterface $docBlockParser,
         private SchemaGeneratorInterface $schemaGenerator,
         private DtoDecorator $dtoDecorator,
-    ) {}
+    ) {
+    }
 
     public function parse(\ReflectionProperty $reflectionProperty): AbstractPropertyDoc
     {
@@ -58,7 +59,8 @@ readonly class ArrayParser implements DataTypeParserInterface
             ->setDocBlock($reflectionProperty->getDocComment())
             ->setType(DataTypeEnum::ARRAY->value)
             ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true)
-            ->setSchemas($schemas ?? []);
+            ->setSchemas($schemas ?? [])
+        ;
 
         return $propertyDoc;
     }
@@ -94,12 +96,10 @@ readonly class ArrayParser implements DataTypeParserInterface
             $docBlocksTypeHints = $this->docBlockParser->parseDocBlock($docBlock);
         }
 
-        $typeHints = [];
-
         if (isset($docBlocksTypeHints[$propertyName])) {
-            $typeHints = $this->docBlockParser->determineTypeHint($docBlocksTypeHints[$propertyName], $declaringClassReflection);
+            return $this->docBlockParser->determineTypeHint($docBlocksTypeHints[$propertyName], $declaringClassReflection);
         }
 
-        return $typeHints;
+        return [];
     }
 }

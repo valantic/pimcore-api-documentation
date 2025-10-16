@@ -19,7 +19,8 @@ readonly class DtoParser implements DataTypeParserInterface
     public function __construct(
         private SchemaGeneratorInterface $schemaGenerator,
         private DtoDecorator $dtoDecorator,
-    ) {}
+    ) {
+    }
 
     public function parse(\ReflectionProperty $reflectionProperty): AbstractPropertyDoc
     {
@@ -42,7 +43,8 @@ readonly class DtoParser implements DataTypeParserInterface
             ->setType('object')
             ->setNullable($reflectionProperty->getType()->allowsNull())
             ->setRef($ref)
-            ->setSchemas($schemas);
+            ->setSchemas($schemas)
+        ;
 
         return $propertyDoc;
     }

@@ -39,7 +39,7 @@ class ApiRenderController extends FrontendController
                 'swagger_data' => ['spec' => json_decode($apiDocs, true, flags: \JSON_THROW_ON_ERROR)],
                 'assets_mode' => $options['assets_mode'],
                 'swagger_ui_config' => $options['swagger_ui_config'],
-            ]
+            ],
         );
     }
 }

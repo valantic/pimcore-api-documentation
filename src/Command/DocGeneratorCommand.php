@@ -25,7 +25,8 @@ class DocGeneratorCommand extends AbstractCommand
     {
         $this
             ->setName('valantic:api-doc:generate')
-            ->setDescription('Generate api docs for controller actions.');
+            ->setDescription('Generate api docs for controller actions.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

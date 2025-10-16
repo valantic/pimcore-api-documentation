@@ -21,7 +21,8 @@ class StringParser implements DataTypeParserInterface
             ->setName($reflectionProperty->getName())
             ->setDocBlock($reflectionProperty->getDocComment())
             ->setType(DataTypeEnum::STRING->value)
-            ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true);
+            ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true)
+        ;
 
         return $propertyDoc;
     }

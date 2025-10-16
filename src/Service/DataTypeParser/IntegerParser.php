@@ -22,7 +22,8 @@ class IntegerParser implements DataTypeParserInterface
             ->setName($reflectionProperty->getName())
             ->setDocBlock($reflectionProperty->getDocComment())
             ->setType(DataTypeEnum::INTEGER->value)
-            ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true);
+            ->setNullable($reflectionProperty->getType()?->allowsNull() ?? true)
+        ;
 
         return $propertyDoc;
     }

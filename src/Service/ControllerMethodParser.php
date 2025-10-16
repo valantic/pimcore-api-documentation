@@ -45,7 +45,8 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         private ResponseDecorator $responseDecorator,
         private ServiceLocator $dataTypeParsers,
         private DocBlockParserInterface $docBlockParser,
-    ) {}
+    ) {
+    }
 
     public function parseMethod(\ReflectionMethod $method): MethodDoc
     {
@@ -57,7 +58,8 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         $methodDoc
             ->setName($method->getName())
             ->setResponsesDoc($responseDoc)
-            ->setRouteDoc($routeDoc);
+            ->setRouteDoc($routeDoc)
+        ;
 
         if ($requestDoc instanceof RequestDoc) {
             $methodDoc->setRequestDoc($requestDoc);
@@ -88,29 +90,28 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
         $route = $this->router->getRouteCollection()->get($routeAttributeArguments['name']);
 
-        if ($route === null) {
+        if (!$route instanceof \Symfony\Component\Routing\Route) {
             throw new IncompleteRouteException(sprintf('Route %s not found.', $routeAttributeArguments['name']));
         }
 
         $path = $route->getPath();
-        preg_match_all('/{([^}]+)}/', (string) $path, $routeParameters);
+        preg_match_all('/{([^}]+)}/', $path, $routeParameters);
 
         $parsedParameters = [];
 
-        if ($routeParameters !== []) {
-            foreach ($routeParameters[1] as $routeParameter) {
-                $parameterDoc = new ParameterDoc();
+        foreach ($routeParameters[1] as $routeParameter) {
+            $parameterDoc = new ParameterDoc();
 
-                $parameterDoc
-                    ->setName($routeParameter)
-                    ->setIn(ParameterDoc::IN_PATH)
-                    ->setRequired(true)
-                    ->setSchema([
-                        'type' => 'string',
-                    ]);
+            $parameterDoc
+                ->setName($routeParameter)
+                ->setIn(ParameterDoc::IN_PATH)
+                ->setRequired(true)
+                ->setSchema([
+                    'type' => 'string',
+                ])
+            ;
 
-                $parsedParameters[] = $parameterDoc;
-            }
+            $parsedParameters[] = $parameterDoc;
         }
 
         $routeDoc = new RouteDoc();
@@ -127,7 +128,8 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         $routeDoc
             ->setPath($path)
             ->setMethod(strtolower((string) $methods))
-            ->setParameters($parsedParameters);
+            ->setParameters($parsedParameters)
+        ;
 
         return $routeDoc;
     }
@@ -183,7 +185,8 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                         ->setDescription($this->getDescription($propertyDoc))
                         ->setIn(ParameterDoc::IN_QUERY)
                         ->setRequired(false)
-                        ->setSchema($propertyDoc->getSchema());
+                        ->setSchema($propertyDoc->getSchema())
+                    ;
 
                     $parsedParameters[] = $parameterDoc;
                 }
@@ -198,7 +201,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                         'application/json' => [
                             'schema' => [
                                 '$ref' => $this->schemaGenerator->formatComponentSchemaPath(
-                                    $this->requestDecorator->getDocsDescription($requestClass)
+                                    $this->requestDecorator->getDocsDescription($requestClass),
                                 ),
                             ],
                         ],
@@ -251,7 +254,8 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
 
             $responseDoc
                 ->setStatus($responseClassName::status())
-                ->setDescription($this->responseDecorator->getDocsDescription($responseClassName));
+                ->setDescription($this->responseDecorator->getDocsDescription($responseClassName))
+            ;
 
             if ($dtoClass !== false) {
                 $schemaName = $this->dtoDecorator->getDocsDescription($dtoClass);
@@ -260,7 +264,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
                 $responseDoc->setContent([
                     'application/json' => [
                         'schema' => [
-                            '$ref' =>  $this->schemaGenerator->formatComponentSchemaPath($schemaName),
+                            '$ref' => $this->schemaGenerator->formatComponentSchemaPath($schemaName),
                         ],
                     ],
                 ]);
@@ -300,7 +304,11 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         $nodes = $this->docBlockParser->parseDocBlock($docBlock);
 
         foreach ($nodes as $node) {
-            if (!$node instanceof PhpDocTagNode || !$node->value instanceof VarTagValueNode) {
+            if (!$node instanceof PhpDocTagNode) {
+                continue;
+            }
+
+            if (!$node->value instanceof VarTagValueNode) {
                 continue;
             }
 

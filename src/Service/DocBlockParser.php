@@ -76,7 +76,7 @@ class DocBlockParser implements DocBlockParserInterface
             return [$classTypeHint];
         }
 
-        if (TypeEnum::tryFrom($typeHint)) {
+        if (TypeEnum::tryFrom($typeHint) instanceof TypeEnum) {
             return [TypeEnum::tryFrom($typeHint)->swaggerEnum()];
         }
 

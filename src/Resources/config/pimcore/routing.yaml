@@ -1,5 +1,5 @@
 valantic_pimcore_api_documentation:
     resource: "@ValanticPimcoreApiDocumentationBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix:   /
 
