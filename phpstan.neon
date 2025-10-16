@@ -12,6 +12,7 @@ parameters:
         - vendor/pimcore/pimcore/stubs/dynamic-constants.php
 
     treatPhpDocTypesAsCertain: false
+
     ignoreErrors:
         -
             identifier: ternary.shortNotAllowed
