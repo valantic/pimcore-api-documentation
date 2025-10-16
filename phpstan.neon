@@ -13,7 +13,8 @@ parameters:
 
     treatPhpDocTypesAsCertain: false
 
-    strictRules:
-        booleansInConditions: false
-        disallowedConstructs: false
-        noVariableVariables: false
+    ignoreErrors:
+        -
+            identifier: ternary.shortNotAllowed
+        -
+            identifier: empty.notAllowed

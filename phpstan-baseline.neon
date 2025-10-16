@@ -1,21 +1,37 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method Valantic\\\\PimcoreApiDocumentationBundle\\\\Contract\\\\Service\\\\DocBlockParserInterface\\:\\:determineTypeHint\\(\\) has parameter \\$reflectionClass with generic class ReflectionClass but does not specify its types\\: T$#"
+			message: '#^Method Valantic\\PimcoreApiDocumentationBundle\\Contract\\Service\\DocBlockParserInterface\:\:determineTypeHint\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Contract/Service/DocBlockParserInterface.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:addDefaultsIfNotSet\\(\\)\\.$#"
+			message: '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:addDefaultsIfNotSet\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Access to an undefined property PHPStan\\\\PhpDocParser\\\\Ast\\\\PhpDoc\\\\PhpDocChildNode\\:\\:\\$value\\.$#"
+			message: '#^Trait Valantic\\PimcoreApiDocumentationBundle\\Http\\Request\\PaginationRequestTrait is used zero times and is not analysed\.$#'
+			identifier: trait.unused
 			count: 1
+			path: src/Http/Request/PaginationRequestTrait.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, string\|false given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Service/DataTypeParser/ArrayParser.php
+
+		-
+			message: '#^Access to an undefined property PHPStan\\PhpDocParser\\Ast\\PhpDoc\\PhpDocChildNode\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 2
 			path: src/Service/DocBlockParser.php
 
 		-
-			message: "#^Method Valantic\\\\PimcoreApiDocumentationBundle\\\\Service\\\\DocBlockParser\\:\\:determineTypeHint\\(\\) has parameter \\$reflectionClass with generic class ReflectionClass but does not specify its types\\: T$#"
+			message: '#^Method Valantic\\PimcoreApiDocumentationBundle\\Service\\DocBlockParser\:\:determineTypeHint\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Service/DocBlockParser.php

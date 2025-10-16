@@ -33,6 +33,14 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/src',
     ])
+    ->withComposerBased(
+        twig: true,
+        doctrine: true,
+        phpunit: true,
+        symfony: true,
+        netteUtils: true,
+        laravel: true
+    )
     ->withRootFiles()
     ->withSkip([
         CountArrayToEmptyArrayComparisonRector::class,

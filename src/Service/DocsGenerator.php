@@ -25,7 +25,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
         #[TaggedIterator(ValanticPimcoreApiDocumentationExtension::TAG_CONTROLLERS)]
         private iterable $controllers,
         private ControllerMethodParserInterface $controllerMethodParser,
-        #[Autowire('%valantic.pimcore_api_doc.base_docs_path%')]
+        #[Autowire(param: 'valantic.pimcore_api_doc.base_docs_path')]
         private string $baseDocsPath,
     ) {
     }
@@ -95,7 +95,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
         $controllerReflection = new \ReflectionClass($controllerClass);
         $methods = $controllerReflection->getMethods();
 
-        return array_filter($methods, static function ($method) use ($controllerClass): bool {
+        return array_filter($methods, static function (\ReflectionMethod $method) use ($controllerClass): bool {
             $methodClass = $method->getDeclaringClass()->getName();
 
             return $method->getName() !== '__construct'
