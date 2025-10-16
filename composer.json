@@ -1,6 +1,6 @@
 {
   "name": "valantic/pimcore-api-documentation",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "description": "Auto generate API documentation for routes",
   "homepage": "https://github.com/valantic/pimcore-api-documentation",
   "license": "MIT",
@@ -34,7 +34,7 @@
     "phpstan/phpstan-strict-rules": "^2.0.7",
     "roave/security-advisories": "dev-latest",
     "rector/rector": "^2.2.3",
-    "valantic/php-cs-fixer-config":"^2.2.1"
+    "valantic/php-cs-fixer-config": "^2.2.1"
   },
   "scripts": {
     "post-install-cmd": [
