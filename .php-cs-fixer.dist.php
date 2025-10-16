@@ -10,3 +10,4 @@ return ConfigFactory::createValanticConfig()
             ->in(__DIR__ . '/src')
     )
     ->setRiskyAllowed(true);
+
