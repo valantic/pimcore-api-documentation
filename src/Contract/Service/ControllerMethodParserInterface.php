@@ -8,5 +8,8 @@ use Valantic\PimcoreApiDocumentationBundle\Model\Doc\MethodDoc;
 
 interface ControllerMethodParserInterface
 {
-    public function parseMethod(\ReflectionMethod $method): MethodDoc;
+    /**
+     * @return MethodDoc[]
+     */
+    public function parseMethod(\ReflectionMethod $method): array;
 }

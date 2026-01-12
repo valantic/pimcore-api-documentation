@@ -48,90 +48,104 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
     ) {
     }
 
-    public function parseMethod(\ReflectionMethod $method): MethodDoc
+    /**
+     * @return MethodDoc[]
+     */
+    public function parseMethod(\ReflectionMethod $method): array
     {
-        $routeDoc = $this->parseRoute($method);
+        $routeDocs = $this->parseRoute($method);
         $requestDoc = $this->parseRequest($method);
         $responseDoc = $this->parseResponses($method);
 
-        $methodDoc = new MethodDoc();
-        $methodDoc
-            ->setName($method->getName())
-            ->setResponsesDoc($responseDoc)
-            ->setRouteDoc($routeDoc)
-        ;
+        $methodDocs = [];
 
-        if ($requestDoc instanceof RequestDoc) {
-            $methodDoc->setRequestDoc($requestDoc);
+        foreach ($routeDocs as $idx => $routeDoc) {
+            $methodDoc = new MethodDoc();
+            $methodDoc
+                ->setName($method->getName() . '-' . $idx)
+                ->setResponsesDoc($responseDoc)
+                ->setRouteDoc($routeDoc)
+            ;
+
+            if ($requestDoc instanceof RequestDoc) {
+                $methodDoc->setRequestDoc($requestDoc);
+            }
+
+            $methodDocs[] = $methodDoc;
         }
 
-        return $methodDoc;
+        return $methodDocs;
     }
 
-    private function parseRoute(\ReflectionMethod $method): RouteDoc
+    /**
+     * @param RouteDoc[]
+     */
+    private function parseRoute(\ReflectionMethod $method): array
     {
+        $routeDocs = [];
+
         $attributes = $method->getAttributes();
 
         foreach ($attributes as $attribute) {
             if ($attribute->getName() === RouteAnnotation::class || $attribute->getName() === RouteAttribute::class) {
                 $routeAttributeArguments = $attribute->getArguments();
 
-                break;
+                if (!isset($routeAttributeArguments['path'], $routeAttributeArguments['methods'])) {
+                    throw new IncompleteRouteException(sprintf('Route in %s::%s not defined or missing attributes "path" and/or "methods".', $method->getDeclaringClass()->getName(), $method->getName()));
+                }
+
+                if (!isset($routeAttributeArguments['name'])) {
+                    throw new IncompleteRouteException(sprintf('Route in %s::%s does not have a "name" property.', $method->getDeclaringClass()->getName(), $method->getName()));
+                }
+
+                $route = $this->router->getRouteCollection()->get($routeAttributeArguments['name']);
+
+                if (!$route instanceof \Symfony\Component\Routing\Route) {
+                    throw new IncompleteRouteException(sprintf('Route %s not found.', $routeAttributeArguments['name']));
+                }
+
+                $path = $route->getPath();
+                preg_match_all('/{([^}]+)}/', $path, $routeParameters);
+
+                $parsedParameters = [];
+
+                foreach ($routeParameters[1] as $routeParameter) {
+                    $parameterDoc = new ParameterDoc();
+
+                    $parameterDoc
+                        ->setName($routeParameter)
+                        ->setIn(ParameterDoc::IN_PATH)
+                        ->setRequired(true)
+                        ->setSchema([
+                            'type' => 'string',
+                        ])
+                    ;
+
+                    $parsedParameters[] = $parameterDoc;
+                }
+
+                $routeDoc = new RouteDoc();
+
+                $methods = $routeAttributeArguments['methods'];
+
+                if (is_array($methods)) {
+                    if (count($methods) > 1) {
+                        throw new UnsupportedRouteException(sprintf('Route %s has multiple methods. This is not yet supported.', $routeAttributeArguments['name']));
+                    }
+                    $methods = $methods[0];
+                }
+
+                $routeDoc
+                    ->setPath($path)
+                    ->setMethod(strtolower((string) $methods))
+                    ->setParameters($parsedParameters)
+                ;
+
+                $routeDocs[] = $routeDoc;
             }
         }
 
-        if (!isset($routeAttributeArguments['path'], $routeAttributeArguments['methods'])) {
-            throw new IncompleteRouteException(sprintf('Route in %s::%s not defined or missing attributes "path" and/or "methods".', $method->getDeclaringClass()->getName(), $method->getName()));
-        }
-
-        if (!isset($routeAttributeArguments['name'])) {
-            throw new IncompleteRouteException(sprintf('Route in %s::%s does not have a "name" property.', $method->getDeclaringClass()->getName(), $method->getName()));
-        }
-
-        $route = $this->router->getRouteCollection()->get($routeAttributeArguments['name']);
-
-        if (!$route instanceof \Symfony\Component\Routing\Route) {
-            throw new IncompleteRouteException(sprintf('Route %s not found.', $routeAttributeArguments['name']));
-        }
-
-        $path = $route->getPath();
-        preg_match_all('/{([^}]+)}/', $path, $routeParameters);
-
-        $parsedParameters = [];
-
-        foreach ($routeParameters[1] as $routeParameter) {
-            $parameterDoc = new ParameterDoc();
-
-            $parameterDoc
-                ->setName($routeParameter)
-                ->setIn(ParameterDoc::IN_PATH)
-                ->setRequired(true)
-                ->setSchema([
-                    'type' => 'string',
-                ])
-            ;
-
-            $parsedParameters[] = $parameterDoc;
-        }
-
-        $routeDoc = new RouteDoc();
-
-        $methods = $routeAttributeArguments['methods'];
-
-        if (is_array($methods)) {
-            if (count($methods) > 1) {
-                throw new UnsupportedRouteException(sprintf('Route %s has multiple methods. This is not yet supported.', $routeAttributeArguments['name']));
-            }
-            $methods = $methods[0];
-        }
-
-        $routeDoc
-            ->setPath($path)
-            ->setMethod(strtolower((string) $methods))
-            ->setParameters($parsedParameters)
-        ;
-
-        return $routeDoc;
+        return $routeDocs;
     }
 
     private function parseRequest(\ReflectionMethod $method): ?RequestDoc
