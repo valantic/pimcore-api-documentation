@@ -26,6 +26,7 @@ class DtoPropertyDoc extends AbstractPropertyDoc implements ComponentSchemaPrope
     /**
      * @return mixed[]
      */
+    #[\Override]
     public function jsonSerialize(): array
     {
         $data = [];

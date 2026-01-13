@@ -7,12 +7,6 @@ parameters:
 			path: src/Contract/Service/DocBlockParserInterface.php
 
 		-
-			message: '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:addDefaultsIfNotSet\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/DependencyInjection/Configuration.php
-
-		-
 			message: '#^Trait Valantic\\PimcoreApiDocumentationBundle\\Http\\Request\\PaginationRequestTrait is used zero times and is not analysed\.$#'
 			identifier: trait.unused
 			count: 1
@@ -32,6 +26,12 @@ parameters:
 
 		-
 			message: '#^Method Valantic\\PimcoreApiDocumentationBundle\\Service\\DocBlockParser\:\:determineTypeHint\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Service/DocBlockParser.php
+
+		-
+			message: '#^Method Valantic\\PimcoreApiDocumentationBundle\\Service\\DocBlockParser\:\:parseUseStatements\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
 			path: src/Service/DocBlockParser.php

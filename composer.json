@@ -20,30 +20,26 @@
     }
   },
   "require": {
-    "php": "^8.2",
+    "php": "^8.3",
     "ext-json": "*",
-    "pimcore/pimcore": "^11.0 || ^12.0",
-    "nelmio/api-doc-bundle": "^4.12",
-    "phpstan/phpdoc-parser": "^1.30"
+    "pimcore/pimcore": "^12.0",
+    "nelmio/api-doc-bundle": "^5.0",
+    "nikic/php-parser": "^5.0",
+    "phpstan/phpdoc-parser": "^2.0"
   },
   "require-dev": {
-    "bamarni/composer-bin-plugin": "^1.8.3",
+    "friendsofphp/php-cs-fixer": "^3.92.5",
     "phpstan/extension-installer": "^1.4.3",
     "phpstan/phpstan": "^2.1.33",
     "phpstan/phpstan-deprecation-rules": "^2.0.3",
     "phpstan/phpstan-strict-rules": "^2.0.7",
+    "rector/rector": "^2.3",
     "roave/security-advisories": "dev-latest",
-    "rector/rector": "^2.3.0",
     "valantic/php-cs-fixer-config": "^2.2.1"
   },
   "scripts": {
-    "post-install-cmd": [
-      "@composer bin all install --ansi"
-    ],
     "post-update-cmd": [
-      "@composer bump -D",
-      "@composer bin all update --ansi",
-      "@composer bin all bump"
+      "@composer bump -D"
     ],
     "rector": [
       "./vendor/bin/rector process"
@@ -52,24 +48,17 @@
       "vendor/bin/phpstan analyse --memory-limit=1G"
     ],
     "php-cs-fixer": [
-      "vendor-bin/phpcs/vendor/bin/php-cs-fixer fix -v --diff"
+      "vendor/bin/php-cs-fixer fix -v --diff"
     ],
     "php-cs-fixer-check": [
-      "vendor-bin/phpcs/vendor/bin/php-cs-fixer fix --diff --dry-run"
+      "vendor/bin/php-cs-fixer fix --diff --dry-run"
     ]
   },
   "prefer-stable": false,
   "config": {
     "allow-plugins": {
-      "bamarni/composer-bin-plugin": true,
       "phpstan/extension-installer": true,
       "php-http/discovery": true
-    }
-  },
-  "extra": {
-    "bamarni-bin": {
-      "bin-links": false,
-      "forward-command": true
     }
   }
 }

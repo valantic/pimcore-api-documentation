@@ -8,7 +8,7 @@ use Valantic\PimcoreApiDocumentationBundle\Model\Component\Property\AbstractProp
 
 class ComponentSchemaDoc implements \JsonSerializable
 {
-    final public const TYPE_OBJECT = 'object';
+    final public const string TYPE_OBJECT = 'object';
     private string $type;
     private string $name;
 

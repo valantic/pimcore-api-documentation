@@ -9,7 +9,6 @@ use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Routing\Annotation\Route as RouteAnnotation;
 use Symfony\Component\Routing\Attribute\Route as RouteAttribute;
 use Symfony\Component\Routing\RouterInterface;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
@@ -78,7 +77,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
     }
 
     /**
-     * @param RouteDoc[]
+     * @return RouteDoc[]
      */
     private function parseRoute(\ReflectionMethod $method): array
     {
@@ -87,7 +86,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
         $attributes = $method->getAttributes();
 
         foreach ($attributes as $attribute) {
-            if ($attribute->getName() === RouteAnnotation::class || $attribute->getName() === RouteAttribute::class) {
+            if ($attribute->getName() === RouteAttribute::class) {
                 $routeAttributeArguments = $attribute->getArguments();
 
                 if (!isset($routeAttributeArguments['path'], $routeAttributeArguments['methods'])) {

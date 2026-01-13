@@ -29,6 +29,7 @@ class EnumPropertyDoc extends AbstractPropertyDoc
         return $this;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         $data = parent::jsonSerialize();
@@ -41,6 +42,7 @@ class EnumPropertyDoc extends AbstractPropertyDoc
     /**
      * @return mixed[]
      */
+    #[\Override]
     public function getSchema(): array
     {
         return [

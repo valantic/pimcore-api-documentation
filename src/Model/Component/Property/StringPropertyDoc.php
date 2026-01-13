@@ -20,6 +20,7 @@ class StringPropertyDoc extends AbstractPropertyDoc
         return $this;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         $data = parent::jsonSerialize();
