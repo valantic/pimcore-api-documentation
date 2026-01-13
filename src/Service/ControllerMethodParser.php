@@ -78,7 +78,7 @@ readonly class ControllerMethodParser implements ControllerMethodParserInterface
     }
 
     /**
-     * @param RouteDoc[]
+     * @return RouteDoc[]
      */
     private function parseRoute(\ReflectionMethod $method): array
     {
