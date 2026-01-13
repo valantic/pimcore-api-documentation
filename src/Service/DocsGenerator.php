@@ -6,8 +6,7 @@ namespace Valantic\PimcoreApiDocumentationBundle\Service;
 
 use League\Csv\Exception;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
-use Symfony\Component\Routing\Annotation\Route as RouteAnnotation;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Routing\Attribute\Route as RouteAttribute;
 use Symfony\Component\Yaml\Yaml;
 use Valantic\PimcoreApiDocumentationBundle\Contract\Service\ControllerMethodParserInterface;
@@ -22,7 +21,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
      * @param array<class-string> $controllers
      */
     public function __construct(
-        #[TaggedIterator(ValanticPimcoreApiDocumentationExtension::TAG_CONTROLLERS)]
+        #[AutowireIterator(ValanticPimcoreApiDocumentationExtension::TAG_CONTROLLERS)]
         private iterable $controllers,
         private ControllerMethodParserInterface $controllerMethodParser,
         #[Autowire(param: 'valantic.pimcore_api_doc.base_docs_path')]
@@ -106,7 +105,7 @@ readonly class DocsGenerator implements DocsGeneratorInterface
                 && $method->isPublic()
                 && array_reduce(
                     $method->getAttributes(),
-                    fn (bool $carry, \ReflectionAttribute $attribute): bool => $carry || $attribute->getName() === RouteAnnotation::class || $attribute->getName() === RouteAttribute::class,
+                    fn (bool $carry, \ReflectionAttribute $attribute): bool => $carry || $attribute->getName() === RouteAttribute::class,
                     false,
                 );
         });

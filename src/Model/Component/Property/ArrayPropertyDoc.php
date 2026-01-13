@@ -37,6 +37,7 @@ class ArrayPropertyDoc extends AbstractPropertyDoc implements ComponentSchemaPro
     /**
      * @return mixed[]
      */
+    #[\Override]
     public function jsonSerialize(): array
     {
         $data = [];
@@ -63,6 +64,7 @@ class ArrayPropertyDoc extends AbstractPropertyDoc implements ComponentSchemaPro
     /**
      * @return mixed[]
      */
+    #[\Override]
     public function getSchema(): array
     {
         return [

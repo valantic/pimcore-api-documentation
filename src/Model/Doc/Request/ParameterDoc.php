@@ -6,8 +6,8 @@ namespace Valantic\PimcoreApiDocumentationBundle\Model\Doc\Request;
 
 class ParameterDoc implements \JsonSerializable
 {
-    final public const IN_PATH = 'path';
-    final public const IN_QUERY = 'query';
+    final public const string IN_PATH = 'path';
+    final public const string IN_QUERY = 'query';
     private string $name;
     private ?string $description = null;
     private string $in;
