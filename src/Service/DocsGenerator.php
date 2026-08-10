@@ -76,8 +76,11 @@ readonly class DocsGenerator implements DocsGeneratorInterface
         $controllerDoc = new ControllerDoc();
 
         foreach ($methods as $method) {
-            $methodDoc = $this->controllerMethodParser->parseMethod($method);
-            $controllerDoc->addMethodDoc($methodDoc);
+            $methodDocs = $this->controllerMethodParser->parseMethod($method);
+
+            foreach ($methodDocs as $methodDoc) {
+                $controllerDoc->addMethodDoc($methodDoc);
+            }
         }
 
         return $controllerDoc;
