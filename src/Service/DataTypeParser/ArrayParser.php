@@ -27,7 +27,6 @@ readonly class ArrayParser implements DataTypeParserInterface
     public function parse(\ReflectionProperty $reflectionProperty): AbstractPropertyDoc
     {
         $typeHints = $this->determineTypeHints($reflectionProperty);
-
         $arrayItems = [];
 
         foreach ($typeHints as $typeHint) {
@@ -82,9 +81,11 @@ readonly class ArrayParser implements DataTypeParserInterface
 
         $docBlocksTypeHints = [];
         $docBlock = null;
+        $parameterName = null;
 
         if ($reflectionProperty->getDocComment()) {
             $docBlock = $reflectionProperty->getDocComment();
+            $parameterName = $propertyName;
         } elseif (
             $declaringClassReflection->hasMethod('__construct')
             && $declaringClassReflection->getMethod('__construct')->getDocComment() !== false
@@ -93,7 +94,7 @@ readonly class ArrayParser implements DataTypeParserInterface
         }
 
         if ($docBlock !== null) {
-            $docBlocksTypeHints = $this->docBlockParser->parseDocBlock($docBlock);
+            $docBlocksTypeHints = $this->docBlockParser->parseDocBlock($docBlock, $parameterName);
         }
 
         if (isset($docBlocksTypeHints[$propertyName])) {
